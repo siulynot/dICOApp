@@ -192,6 +192,8 @@ $('.btn_coindashboard_receive').click(function() {
 
 		bootbox.dialog({
 		    //title: 'A custom dialog with init',
+		  onEscape: true,
+		  backdrop: true,
 			message: '<div style="text-align: center; margin-top: -40px;"><img src="img/cryptologo/'+coin+'.png" style="border: 10px solid #fff;border-radius: 50px; background: #fff;"/></div><div style="text-align: center;"><div id="receive_addr_qrcode"></div><pre style="font-size: 18px;">'+data.coin.smartaddress+'</pre class="receive_addr_qrcode_addr"></div>'
 		});
 
@@ -295,6 +297,8 @@ $('.btn-sendcoin').click(function(e){
 			}
 			if (data.complete == true) {
 				bootbox.confirm({
+					onEscape: true,
+					backdrop: true,
 					message: `<b>Send</b>: `+send_amount+` `+ajax_data.coin+`<br>
 									<b>To</b>: `+to_addr+`<br>`,
 					buttons: {
@@ -441,6 +445,8 @@ $('.dex_showinv_alice_tbl tbody').on('click', '.btn_coiniventory_detail', functi
 	console.log(coininventory.alice[index]);
 
 	bootbox.dialog({
+		onEscape: true,
+		backdrop: true,
 		message: `
 			<table class="table table-striped">
 				<tbody>
@@ -964,6 +970,7 @@ function enable_disable_coin(data) {
 					}
 					if (data.error == 'couldnt find coin locally installed') { //{error: "couldnt find coin locally installed", coin: "BTC"}
 						bootbox.alert({
+							backdrop: true,
 							title: "Couldn't find "+data.coin+" locally installed",
 							message: `<p>It seems you don't have `+data.coin+` wallet installed on your OS. Please check these following points to make sure you have your wallet setup properly:</p>
 							<ol>
@@ -1032,6 +1039,7 @@ function enable_disable_coin(data) {
 				}
 				if (data.error == 'couldnt find coin locally installed') { //{error: "couldnt find coin locally installed", coin: "BTC"}
 					bootbox.alert({
+						backdrop: true,
 						title: "Couldn't find "+data.coin+" locally installed",
 						message: `<p>It seems you don't have `+data.coin+` wallet installed on your OS. Please check these following points to make sure you have your wallet setup properly:</p>
 						<ol>
@@ -1401,6 +1409,7 @@ function make_inventory_withdraw(data) {
 			}
 			if (data.complete == true) {
 				bootbox.confirm({
+					backdrop: true,
 					message: 'Please confirm if you are ready to make inventory.',
 					buttons: {
 						confirm: {
@@ -1587,6 +1596,7 @@ function get_coins_list() {
 function addcoins_dialog(){
 
 	var bot_update_bootbox = bootbox.dialog({
+		backdrop: true,
 		message: `
 			<div class="row">
 				<div class="col-sm-12">
@@ -2285,6 +2295,8 @@ $('.your_coins_balance_info').on('click', '.coin_balance_receive', function() {
 
 		bootbox.dialog({
 		    //title: 'A custom dialog with init',
+		  onEscape: true,
+		  backdrop: true,
 			message: '<div style="text-align: center; margin-top: -40px;"><img src="img/cryptologo/'+coin+'.png" style="border: 10px solid #fff;border-radius: 50px; background: #fff;"/></div><div style="text-align: center;"><div id="receive_addr_qrcode"></div><pre style="font-size: 18px;">'+data.coin.smartaddress+'</pre class="receive_addr_qrcode_addr"></div>'
 		});
 
@@ -2310,6 +2322,8 @@ $('.your_coins_balance_info').on('click', '.coin_balance_send', function() {
 	var tx_coin = $(this).data('coin');
 
 	var coin_balance_send_bootbox = bootbox.dialog({
+		onEscape: true,
+		backdrop: true,
 		message: `
 			<div class="row">
 				<div class="col-sm-12">
@@ -2655,10 +2669,13 @@ function bot_buy_sell(bot_data) {
 		if (!data.error === false) {
 			if (data.error == 'not enough funds') {
 				//toastr.info(data.error + '<br>Balance: ' + data.balance + ' ' + data.coin, 'Bot Info');
-				bootbox.alert(`Looks like you don't have enough UTXOs in your balance.<br>
-					Not a problem. I have executed the recommended command to make required UTXOs for you.<br>
+				bootbox.alert({
+					backdrop: true,
+					onEscape: true,
+					title: `Looks like you don't have enough UTXOs in your balance.`,
+					message: `Not a problem. I have executed the recommended command to make required UTXOs for you.<br>
 					If you see some outgoing transactions from your barterDEX smartaddress that's sent to the same smartaddress of yours to create some inventory transactions for barterDEX to make required trades.<br>
-					Please try in a moment with same or different volume and you should be all good to go.`);
+					Please try in a moment with same or different volume and you should be all good to go.`});
 				console.log(JSON.stringify(data))
 
 				if (data.withdraw.complete === true) {
@@ -2838,7 +2855,64 @@ function bot_status(bot_data) {
 			buy_sell_text = (data.action == 'buy') ? 'Buy' : 'Sell';
 			max_min_text = (data.action == 'buy') ? 'Max' : 'Min';
 
+			// "tradeid": 1750749844, "price": 0.13749702, "volume":
+
+			function renderTradeAttempts(trades) {
+				if (trades &&
+						trades.length) {
+					let _out = {
+						request: '',
+						trade: '',
+						requestNonEmpty: false,
+						tradeNonEmpty: false,
+					};
+
+					_out.request = `<table width="100%" class="table table-striped">
+												<tr>
+													<th>Request ID</th>
+													<th>Quote ID</th>`;
+
+					for (let i = 0; i < trades.length; i++) {
+						if (trades[i].requestid) {
+							_out.requestNonEmpty = true;
+							_out.request += `<tr>
+																<td>${trades[i].requestid}</td>
+																<td>${trades[i].quoteid}</td>
+															</tr>`;
+						}
+					}
+
+					_out.request += `</table>`;
+
+					_out.trade = `<table width="100%" class="table table-striped">
+												<tr>
+													<th>Trade ID</th>
+													<th>Price</th>
+													<th>Volume</th>`;
+
+					for (let i = 0; i < trades.length; i++) {
+						if (trades[i].tradeid) {
+							_out.tradeNonEmpty = true;
+							_out.trade += `<tr>
+																<td>${trades[i].tradeid}</td>
+																<td>${trades[i].price}</td>
+																<td>${trades[i].volume}</td>
+															</tr>`;
+						}
+					}
+
+					_out.trade += `</table>`;
+
+					return (_out.requestNonEmpty ? _out.request : '') + (_out.tradeNonEmpty ? _out.trade : '');
+				} else {
+					return '';
+				}
+			}
+
 			var bot_update_bootbox = bootbox.dialog({
+				onEscape: true,
+				backdrop: true,
+				onEscape: true,
 				message: `
 					<table width="100%" class="table table-striped">
 						<tr>
@@ -2879,7 +2953,7 @@ function bot_status(bot_data) {
 						</tr>
 						<tr>
 							<td>Trades Attempts</td>
-							<td>` + JSON.stringify(data.trades, null, 2) + `</td>
+							<td>` + renderTradeAttempts(data.trades) + `</td>
 						</tr>
 					</table>
 
@@ -3216,6 +3290,8 @@ function check_swap_status_details(swap_data) {
 			iambob_answer = (data.iambob == 0) ? 'Buyer' : 'Seller';
 
 			bootbox.dialog({
+				onEscape: true,
+				backdrop: true,
 				message: `
 					<table width="100%" class="table table-striped">
 						<tr>
