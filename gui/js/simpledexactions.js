@@ -1983,6 +1983,10 @@ $('.portfolio_set_autogoals_btn').click(function() {
 
 /* Auto Trading Bot */
 
+function setOrderPrice(price) {
+	$('.trading_pair_coin_price').val(price);
+}
+
 function CheckOrderBookFn(sig) {
 	if (sig == false) {
 		clearInterval(CheckOrderbook_Interval);
@@ -2065,7 +2069,7 @@ function CheckOrderBookFn(sig) {
 					var mytrade_true = 'class="warning"';
 				}
 				var orderbook_asks_tr = '';
-				orderbook_asks_tr += '<tr ' + mytrade_true + '>';
+				orderbook_asks_tr += '<tr ' + mytrade_true + ' onclick=\"setOrderPrice(' + val.price + ')\"">';
 				orderbook_asks_tr += '<td>' + val.price + '</td>';
 				orderbook_asks_tr += '<td>' + val.minvolume + '</td>';
 				orderbook_asks_tr += '<td>' + val.maxvolume + '</td>';

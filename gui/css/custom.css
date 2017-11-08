@@ -83,7 +83,7 @@ textarea {
         text-align: center;
         background-color: #eee;
     }
-    .navbar>.container .navbar-brand-centered, 
+    .navbar>.container .navbar-brand-centered,
     .navbar>.container-fluid .navbar-brand-centered {
         margin-left: -80px;
     }
@@ -102,4 +102,8 @@ textarea {
 #exchange_coin_asks, #exchange_coin_bids, .exchange_trade_status_body {
   overflow: scroll;
   height: 285px;
+}
+
+.orderbook_asks {
+  cursor: pointer;
 }
