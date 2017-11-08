@@ -40,7 +40,7 @@ $(document).ready(function() {
 		});
 
 		check_coin_balance(false);
-		CheckOrderbook_Interval = setInterval(CheckOrderBookFn,3000);
+		CheckOrderbook_Interval = setInterval(CheckOrderBookFn,15000);
 		check_swap_status_Internal = setInterval(check_swap_status,10000);
 		check_swap_status();
 		check_bot_list_Internal = setInterval(check_bot_list, 60000);
@@ -2590,6 +2590,9 @@ function check_bot_list(sig) {
 					exchange_bot_list_tr += '<td>'+val.trades.length+'</td>';
 					exchange_bot_list_tr += '<td style="text-align: center;"><div class="btn-group"><button class="btn btn-info btn_bot_status" data-botid="' + val.botid + '" data-action="status"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button><button class="btn btn-success btn_bot_resume" data-botid="' + val.botid + '" data-action="resume" ' + disable_resume_btn + '><span class="glyphicon glyphicon-play" aria-hidden="true"></span></button><button class="btn btn-warning btn_bot_pause" data-botid="' + val.botid + '" data-action="pause" ' + disable_pause_btn + '><span class="glyphicon glyphicon-pause" aria-hidden="true"></span></button><button class="btn btn-danger btn_bot_stop" data-botid="' + val.botid + '" data-action="stop" ' + disable_stop_btn + '><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></button></div></td>';
 					exchange_bot_list_tr += '</tr>';
+					/*exchange_bot_list_tr += '<tr>';
+					exchange_bot_list_tr += '<td colspan="5" style="padding: 0;"><div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div></div></td>';
+					exchange_bot_list_tr += '</tr>';*/
 					$('.exchange_bot_list_tbl tbody').append(exchange_bot_list_tr);
 				}
 			})
