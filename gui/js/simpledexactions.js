@@ -54,7 +54,7 @@ $(document).ready(function() {
 		get_coin_info('MNZ');
 
 //---- dICO App Settings END ----//
-		
+
 		$('.relvol_basevol_coin').html($('.trading_pair_coin').selectpicker('val'));
 
 	} else {
@@ -647,7 +647,7 @@ $('.btn-bot_action').click(function(e){
 	console.log($(this).data('action'));
 
 	pair_price = $('.trading_pair_coin_price').val();
-	
+
 	base_volume = $('.trading_pair_coin_volume').val();
 
 	pair_volume = pair_price * base_volume;
@@ -666,7 +666,7 @@ $('.btn-bot_action').click(function(e){
 
 $('.trading_pair_coin_price').keyup(function(){
 	pair_price = $('.trading_pair_coin_price').val();
-	
+
 	base_volume = $('.trading_pair_coin_volume').val();
 
 	pair_volume = pair_price * base_volume;
@@ -676,7 +676,7 @@ $('.trading_pair_coin_price').keyup(function(){
 
 $('.trading_pair_coin_volume').keyup(function(){
 	pair_price = $('.trading_pair_coin_price').val();
-	
+
 	base_volume = $('.trading_pair_coin_volume').val();
 
 	pair_volume = pair_price * base_volume;
@@ -1089,20 +1089,25 @@ function check_coin_inventory(coin) {
 			sessionStorage.setItem('mm_coininventory', JSON.stringify(data));
 			$('.RawJSONInventory-output').html(JSON.stringify(data, null, 2));
 			$('.dex_showinv_alice_tbl tbody').empty();
+
+			var inv_alice_table_tr = '';
+			inv_alice_table_tr += '<tr>';
+				inv_alice_table_tr += '<th>Index</th>';
+				inv_alice_table_tr += '<th>Coin</th>';
+				inv_alice_table_tr += '<th>Vout1</th>';
+				inv_alice_table_tr += '<th>Value1</th>';
+				inv_alice_table_tr += '<th>Vout2</th>';
+				inv_alice_table_tr += '<th>Value2</th>';
+				inv_alice_table_tr += '<th></th>';
+			inv_alice_table_tr += '</tr>';
+			$('.dex_showinv_alice_tbl tbody').append(inv_alice_table_tr);
+
 			$.each(data.alice, function(index, val) {
 				//console.log(index);
 				//console.log(val);
-				var inv_alice_table_tr = '';
-				inv_alice_table_tr += '<tr>';
-					inv_alice_table_tr += '<th rowspan="2" style="width: 30px;">' + index + '</th>';
-					inv_alice_table_tr += '<th>coin</th>';
-					inv_alice_table_tr += '<th>vout1</th>';
-					inv_alice_table_tr += '<th>value1</th>';
-					inv_alice_table_tr += '<th>vout2</th>';
-					inv_alice_table_tr += '<th>value2</th>';
-					inv_alice_table_tr += '<th></th>';
-				inv_alice_table_tr += '</tr>';
-				inv_alice_table_tr += '<tr>';
+					inv_alice_table_tr = '';
+					inv_alice_table_tr += '<tr>';
+					inv_alice_table_tr += '<td>' + index + '</td>';
 					inv_alice_table_tr += '<td>' + val.coin + '</td>';
 					inv_alice_table_tr += '<td>' + val.vout + '</td>';
 					inv_alice_table_tr += '<td>' + (parseFloat(val.value)/100000000).toFixed(8) + ' ' + val.coin + '</td>';
@@ -1141,18 +1146,20 @@ function check_coin_listunspent(coin_data) {
 		//console.log(data);
 
 		$('.dex_showlist_unspents_tbl tbody').empty();
+		var show_list_unspents_tbl_tr = '';
+		show_list_unspents_tbl_tr += '<tr>';
+			show_list_unspents_tbl_tr += '<th style="width: 30px;">Index</th>';
+			show_list_unspents_tbl_tr += '<th>Coin</th>';
+			show_list_unspents_tbl_tr += '<th>Height</th>';
+			show_list_unspents_tbl_tr += '<th>TX Possition</th>';
+			show_list_unspents_tbl_tr += '<th>Value</th>';
+			show_list_unspents_tbl_tr += '<th>TX Hash</th>';
+			show_list_unspents_tbl_tr += '</tr>';
+		$('.dex_showlist_unspents_tbl tbody').append(show_list_unspents_tbl_tr);
 		$.each(data, function(index, val) {
 			//console.log(index);
 			//console.log(val);
-			var show_list_unspents_tbl_tr = '';
-			show_list_unspents_tbl_tr += '<tr>';
-				show_list_unspents_tbl_tr += '<th style="width: 30px;">Index</th>';
-				show_list_unspents_tbl_tr += '<th>coin</th>';
-				show_list_unspents_tbl_tr += '<th>height</th>';
-				show_list_unspents_tbl_tr += '<th>TX Possition</th>';
-				show_list_unspents_tbl_tr += '<th>Value</th>';
-				show_list_unspents_tbl_tr += '<th>TX Hash</th>';
-			show_list_unspents_tbl_tr += '</tr>';
+			show_list_unspents_tbl_tr = '';
 			show_list_unspents_tbl_tr += '<tr>';
 				show_list_unspents_tbl_tr += '<td>' + index + '</td>';
 				show_list_unspents_tbl_tr += '<td>' + coin_data.coin + '</td>';
@@ -2228,7 +2235,7 @@ $('.your_coins_balance_info').on('click', '.coin_balance_enable_native', functio
 $('.your_coins_balance_info').on('click', '.coin_balance_enable_electrum', function() {
 	console.log('coin_balance_enable_electrum clicked');
 	console.log($(this).data());
-	
+
 	enable_disable_coin($(this).data());
 	bot_screen_sellcoin_balance();
 	bot_screen_coin_balance();
@@ -2237,7 +2244,7 @@ $('.your_coins_balance_info').on('click', '.coin_balance_enable_electrum', funct
 $('.your_coins_balance_info').on('click', '.coin_balance_disable', function() {
 	console.log('coin_balance_disable clicked');
 	console.log($(this).data());
-	
+
 	enable_disable_coin($(this).data());
 	bot_screen_sellcoin_balance();
 	bot_screen_coin_balance();
@@ -2297,7 +2304,7 @@ $('.your_coins_balance_info').on('click', '.coin_balance_send', function() {
 	console.log($(this).data());
 
 	var tx_coin = $(this).data('coin');
-	
+
 	var coin_balance_send_bootbox = bootbox.dialog({
 		message: `
 			<div class="row">
@@ -2352,7 +2359,7 @@ $('.your_coins_balance_info').on('click', '.coin_balance_send', function() {
 					output_data[to_addr] = send_amount;
 					console.log(output_data);
 
-					
+
 					console.log(tx_coin);
 					create_sendtx(tx_coin, output_data);
 				}
@@ -2361,7 +2368,7 @@ $('.your_coins_balance_info').on('click', '.coin_balance_send', function() {
 	});
 	coin_balance_send_bootbox.init(function(){
 		console.log('coin_balance_send_bootbox dialog opened.')
-		
+
 	});
 
 });
@@ -2373,7 +2380,7 @@ $('.your_coins_balance_info').on('click', '.coin_balance_inventory', function() 
 	addr = $(this).data('addr');
 	balance = $(this).data('balance');
 
-	
+
 	$('.screen-exchange').hide()
 	$('.screen-inventory').show();
 	CheckOrderBookFn(false);
@@ -2437,7 +2444,7 @@ function create_sendtx(coin,tx_data){
 				toastr.error('Transaction did not complete. Please try again.', 'Transaction Info');
 			}
 		}
-		
+
 	}).fail(function(jqXHR, textStatus, errorThrown) {
 		// If fail
 		console.log(textStatus + ': ' + errorThrown);
@@ -2646,7 +2653,7 @@ function bot_buy_sell(bot_data) {
 					If you see some outgoing transactions from your barterDEX smartaddress that's sent to the same smartaddress of yours to create some inventory transactions for barterDEX to make required trades.<br>
 					Please try in a moment with same or different volume and you should be all good to go.`);
 				console.log(JSON.stringify(data))
-				
+
 				if (data.withdraw.complete === true) {
 					bot_sendrawtx(data.withdraw);
 				} else {
