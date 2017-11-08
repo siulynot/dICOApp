@@ -107,3 +107,7 @@ textarea {
 .orderbook_asks {
   cursor: pointer;
 }
+
+.orderbook_asks tr:hover td {
+  background: #eae7e7;
+}
