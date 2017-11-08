@@ -20,7 +20,7 @@ const killmm = require('./ipc/killmm');
 
 const appBasicInfo = {
   name: 'dICOApp',
-  version: '0.5.3-beta'
+  version: '0.5.4-beta'
 };
 
 app.setName(appBasicInfo.name);
