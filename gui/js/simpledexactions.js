@@ -2852,6 +2852,60 @@ function bot_status(bot_data) {
 			buy_sell_text = (data.action == 'buy') ? 'Buy' : 'Sell';
 			max_min_text = (data.action == 'buy') ? 'Max' : 'Min';
 
+			// "tradeid": 1750749844, "price": 0.13749702, "volume":
+
+			function renderTradeAttempts(trades) {
+				if (trades &&
+						trades.length) {
+					let _out = {
+						request: '',
+						trade: '',
+						requestNonEmpty: false,
+						tradeNonEmpty: false,
+					};
+
+					_out.request = `<table width="100%" class="table table-striped">
+												<tr>
+													<th>Request ID</th>
+													<th>Quote ID</th>`;
+
+					for (let i = 0; i < trades.length; i++) {
+						if (trades[i].requestid) {
+							_out.requestNonEmpty = true;
+							_out.request += `<tr>
+																<td>${trades[i].requestid}</td>
+																<td>${trades[i].quoteid}</td>
+															</tr>`;
+						}
+					}
+
+					_out.request += `</table>`;
+
+					_out.trade = `<table width="100%" class="table table-striped">
+												<tr>
+													<th>Trade ID</th>
+													<th>Price</th>
+													<th>Volume</th>`;
+
+					for (let i = 0; i < trades.length; i++) {
+						if (trades[i].tradeid) {
+							_out.tradeNonEmpty = true;
+							_out.trade += `<tr>
+																<td>${trades[i].tradeid}</td>
+																<td>${trades[i].price}</td>
+																<td>${trades[i].volume}</td>
+															</tr>`;
+						}
+					}
+
+					_out.trade += `</table>`;
+
+					return (_out.requestNonEmpty ? _out.request : '') + (_out.tradeNonEmpty ? _out.trade : '');
+				} else {
+					return '';
+				}
+			}
+
 			var bot_update_bootbox = bootbox.dialog({
 				onEscape: true,
 				backdrop: true,
@@ -2896,7 +2950,7 @@ function bot_status(bot_data) {
 						</tr>
 						<tr>
 							<td>Trades Attempts</td>
-							<td>` + JSON.stringify(data.trades, null, 2) + `</td>
+							<td>` + renderTradeAttempts(data.trades) + `</td>
 						</tr>
 					</table>
 
