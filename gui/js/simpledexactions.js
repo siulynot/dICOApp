@@ -2702,9 +2702,11 @@ function bot_buy_sell(bot_data) {
 					backdrop: true,
 					onEscape: true,
 					title: `Looks like you don't have enough UTXOs in your balance.`,
-					message: `Not a problem. I have executed the recommended command to make required UTXOs for you.<br>
-					If you see some outgoing transactions from your barterDEX smartaddress that's sent to the same smartaddress of yours to create some inventory transactions for barterDEX to make required trades.<br>
-					Please try in a moment with same or different volume and you should be all good to go.`});
+					message: `<p>Not a problem. I have executed the recommended command to make required UTXOs for you.</p>
+					<p>If you see some outgoing transactions from your barterDEX smartaddress that's sent to the same smartaddress of yours to create some inventory transactions for barterDEX to make required trades.<br>
+					Please try in a moment with same or different volume and you should be all good to go.</p>
+					<p>If you are still getting the same error again, please try the "Inventory" button under the coin's logo where you see it's balance.<br>
+					That will give you good overview what exactly UTXO means and what you need to do to fix this error.</p>`});
 				console.log(JSON.stringify(data))
 
 				if (data.withdraw.complete === true) {
