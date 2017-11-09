@@ -111,3 +111,7 @@ textarea {
 .orderbook_asks tr:hover td {
   background: #eae7e7;
 }
+
+.progress-nomargin {
+  margin-bottom: 0px !important;
+}

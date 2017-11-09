@@ -2563,8 +2563,8 @@ function check_bot_list(sig) {
 		} else {
 			$('.exchange_bot_list_tbl tbody').empty();
 			$.each(data, function(index, val) {
-				console.log(index);
-				console.log(val);
+				//console.log(index);
+				//console.log(val);
 				if(!val.error === false) {
 					var exchange_bot_list_tr = '';
 					exchange_bot_list_tr += '<tr>';
@@ -2573,6 +2573,25 @@ function check_bot_list(sig) {
 					exchange_bot_list_tr += '</tr>';
 					$('.exchange_bot_list_tbl tbody').append(exchange_bot_list_tr);
 				} else {
+
+					function botProgressBar(){
+						var trades = val.trades;
+						//console.log(trades);
+						var _out = {};
+						_out.total = 0;
+						for (let i = 0; i < trades.length; i++) {
+							//console.log(_out.total);
+							if(!isNaN(trades[i].volume)){
+								_out.total += trades[i].volume;
+							}
+						}
+
+						_out.percent = (_out.total / val.totalbasevolume) * 100
+						//console.log(_out.total);
+						return _out
+					}
+
+					var bot_progress_data = botProgressBar();
 
 					if (!val.paused === false) {
 						var disable_resume_btn = ' ';
@@ -2596,17 +2615,27 @@ function check_bot_list(sig) {
 
 					var exchange_bot_list_tr = '';
 					exchange_bot_list_tr += '<tr>';
-					//exchange_bot_list_tr += '<td>'+val.botid+'</td>';
-					exchange_bot_list_tr += '<td>'+val.name+'</td>';
-					//exchange_bot_list_tr += '<td>'+val.action+'</td>';
-					exchange_bot_list_tr += '<td>'+max_min_val+'</td>';
-					exchange_bot_list_tr += '<td>'+val.totalrelvolume+'</td>';
-					exchange_bot_list_tr += '<td>'+val.trades.length+'</td>';
-					exchange_bot_list_tr += '<td style="text-align: center;"><div class="btn-group"><button class="btn btn-info btn_bot_status" data-botid="' + val.botid + '" data-action="status"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button><button class="btn btn-success btn_bot_resume" data-botid="' + val.botid + '" data-action="resume" ' + disable_resume_btn + '><span class="glyphicon glyphicon-play" aria-hidden="true"></span></button><button class="btn btn-warning btn_bot_pause" data-botid="' + val.botid + '" data-action="pause" ' + disable_pause_btn + '><span class="glyphicon glyphicon-pause" aria-hidden="true"></span></button><button class="btn btn-danger btn_bot_stop" data-botid="' + val.botid + '" data-action="stop" ' + disable_stop_btn + '><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></button></div></td>';
+						//exchange_bot_list_tr += '<td>'+val.botid+'</td>';
+						exchange_bot_list_tr += `<td style="font-size: 14px; font-weight: 200;">
+													<span><font style="font-weight: 400;">`+val.name+`</font></span><br>
+													<span><font style="font-weight: 400;">Max Price:</font> `+ max_min_val +` `+val.rel+`</span><br>
+													<span><font style="font-weight: 400;">Total Spending:</font> `+val.totalrelvolume+` `+val.rel+`</span>
+												</td>`;
+						//exchange_bot_list_tr += '<td>'+val.action+'</td>';
+						//exchange_bot_list_tr += '<td>'+max_min_val+'</td>';
+						//exchange_bot_list_tr += '<td>'+val.totalrelvolume+'</td>';
+						exchange_bot_list_tr += `<td>
+													<div style="font-size: 14px; font-weight: 200;">
+													<span><font style="font-weight: 400;">Total to Buy:</font> `+val.totalbasevolume+` `+val.base+`</span><br>
+													<span><font style="font-weight: 400;">Total Bought:</font> `+ bot_progress_data.total.toFixed(8) +` `+val.base+`</span><br>
+													<span><font style="font-weight: 400;">Trade Attempts:</font> `+val.trades.length+`</span>
+													</div>
+												</td>`;
+						exchange_bot_list_tr += '<td style="text-align: center;"><div class="btn-group"><button class="btn btn-sm btn-info btn_bot_status" data-botid="' + val.botid + '" data-action="status"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button><button class="btn btn-sm btn-success btn_bot_resume" data-botid="' + val.botid + '" data-action="resume" ' + disable_resume_btn + '><span class="glyphicon glyphicon-play" aria-hidden="true"></span></button><button class="btn btn-sm btn-warning btn_bot_pause" data-botid="' + val.botid + '" data-action="pause" ' + disable_pause_btn + '><span class="glyphicon glyphicon-pause" aria-hidden="true"></span></button><button class="btn btn-sm btn-danger btn_bot_stop" data-botid="' + val.botid + '" data-action="stop" ' + disable_stop_btn + '><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></button></div></td>';
 					exchange_bot_list_tr += '</tr>';
-					/*exchange_bot_list_tr += '<tr>';
-					exchange_bot_list_tr += '<td colspan="5" style="padding: 0;"><div class="progress"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%">75%</div></div></td>';
-					exchange_bot_list_tr += '</tr>';*/
+					exchange_bot_list_tr += '<tr>';
+						exchange_bot_list_tr += '<td colspan="5" style="padding: 0;"><div class="progress progress-nomargin"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="' + bot_progress_data.percent.toFixed(2) + '" aria-valuemin="0" aria-valuemax="100" style="-webkit-transition: none !important; transition: none !important; width: ' + bot_progress_data.percent.toFixed(2) + '%; text-shadow: 0px 0px 5px rgba(150, 150, 150, 1);">' + bot_progress_data.percent.toFixed(2) + '%</div></div></td>';
+					exchange_bot_list_tr += '</tr>';
 					$('.exchange_bot_list_tbl tbody').append(exchange_bot_list_tr);
 				}
 			})
@@ -2768,7 +2797,7 @@ function bot_stop_pause_resume(bot_data) {
 		if (!data.error === false) {
 			toastr.error(data.error, 'Bot Info');
 		} else if (data.result == 'success') {
-			toastr.success('Bot ID: ' + bot_data.botid + ' ' + action_result + 'ed', 'Bot Info');
+			toastr.success('Bot ID: ' + bot_data.botid + ' ' + action_result, 'Bot Info');
 		}
 	}).fail(function(jqXHR, textStatus, errorThrown) {
 	    // If fail
