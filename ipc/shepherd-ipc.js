@@ -171,10 +171,20 @@ ExecMarketMaker = function(data) {
       }
 
       // console.log(`[Decker] exec ${dICOBin} ${params}`);
+      /*var out = fs.openSync(`${dICODir}/out.log`, 'a');
+      var err = fs.openSync(`${dICODir}/out.log`, 'a');
+
+      var cp = require('child_process');
+      console.log(params);
+      console.log(dICOBin);
+      var child = cp.spawn(dICOBin, [params], { detached: true, stdio: [ 'ignore', out, err ] });
+      child.unref();*/
+
+      var logStream = fs.createWriteStream(`${dICODir}/logFile.log`, {flags: 'a'});
 
       mmid = exec(`${dICOBin} ${params}`, {
             cwd: dICODir,
-            maxBuffer: 1024 * 10000 // 10 mb
+            maxBuffer: 1024 * 50000 // 50 mb
             }, function(error, stdout, stderr) {
             console.log(`stdout: ${stdout}`);
             console.log(`stderr: ${stderr}`);
@@ -191,4 +201,12 @@ ExecMarketMaker = function(data) {
               }*/
             }
       });
+
+      mmid.stdout.on('data', (data) => {
+        console.log(`child stdout:\n${data}`);
+      }).pipe(logStream);
+
+      mmid.stderr.on('data', (data) => {
+        console.error(`child stderr:\n${data}`);
+      }).pipe(logStream);
 }
