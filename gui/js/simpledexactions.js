@@ -909,8 +909,27 @@ function get_coins() {
 	});
 }
 
+let electrumCoinsKeepAlive = {};
 
 function enable_disable_coin(data) {
+	if (!data.electrum) {
+		if (electrumCoinsKeepAlive[data.coin] &&
+				data.method === 'disable') {
+			clearInterval(electrumCoinsKeepAlive[data.coin]);
+			delete electrumCoinsKeepAlive[data.coin];
+		} else {
+			const _int = setInterval(() => {
+				enable_disable_coin({
+					method: 'enable',
+					coin: data.coin,
+					electrum: false,
+				});
+			}, 300 * 1000);
+
+			electrumCoinsKeepAlive[data.coin] = _int;
+		}
+	}
+
 	console.log(data);
 
 	var electrum_option = data.electrum //If 'false', electrum option selected
