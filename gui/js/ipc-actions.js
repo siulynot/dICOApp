@@ -36,6 +36,106 @@ $('.dexlogout-btn').click(function(e) {
 	sessionStorage.clear();
 });
 
+$('.login-genpass-btn').click(function(e){
+	e.preventDefault();
+
+	var login_gen_pass = bootbox.dialog({
+		onEscape: true,
+		backdrop: true,
+		onEscape: true,
+		message: `
+<form>
+  <div class="form-group">
+    <label>New Passphrase</label>
+    <div class="input-group">
+      <input type="text" class="form-control btn_gen_pass_input1">
+    <span class="input-group-btn">
+	    <button class="btn btn-info btn_gen_pass_regenpass" type="button"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Regen</button>
+	</span>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Verify Passphrase</label>
+    <input type="text" class="form-control btn_gen_pass_input2" placeholder="Repat the passphrase here as shown in first input field">
+  </div>
+  <div class="form-group">
+  	<div class="col-sm-12 input-group"><p>To generate a new passphrase click on "Regen" button.</p>
+	<p>Make sure to save this new passphrase.<br> To confirm if you have saved it, please type in the passphrase in "Verify Passphrase" field.</p></div></div>
+  </div>
+</form>`,
+		closeButton: false,
+		size: 'large',
+
+		buttons: {
+			cancel: {
+				label: "Close",
+				className: 'btn-default',
+				callback: function(){
+
+				}
+			},
+			ok: {
+				label: "Login with new passphrase",
+				className: 'btn-primary btn_gen_pass_regenpass_login',
+				callback: function(){
+					var pass_input1 = $('.btn_gen_pass_input1').val();
+					var pass_input2 = $('.btn_gen_pass_input2').val();
+					//console.log(pass_input1);
+					//console.log(pass_input2);
+
+					$('.loginPassphrase').val(pass_input2);
+					$('.login-btn').trigger('click');
+				}
+			}
+		}
+	});
+	login_gen_pass.init(function(){
+		console.log('dialog opened.')
+		$('.btn_gen_pass_regenpass_login').attr("disabled", "disabled");
+		$('.btn_gen_pass_input1').val(PassPhraseGenerator.generatePassPhrase(128));
+
+		$('.btn_gen_pass_regenpass').click(function(e){
+			e.preventDefault();
+			console.log('btn_gen_pass_regenpass clicked');
+			$('.btn_gen_pass_input1').val(PassPhraseGenerator.generatePassPhrase(128));
+		})
+
+		$('.btn_gen_pass_input1').keyup(function() {
+
+			var pass_input1 = $('.btn_gen_pass_input1').val();
+			var pass_input2 = $('.btn_gen_pass_input2').val();
+			//console.log(pass_input1);
+			//console.log(pass_input2);
+
+			if (pass_input1 !== pass_input2){
+				$('.btn_gen_pass_regenpass_login').attr("disabled", "disabled");
+			} else {
+				$('.btn_gen_pass_regenpass_login').removeAttr("disabled");
+			}
+
+		});
+
+		$('.btn_gen_pass_input2').keyup(function() {
+
+			var pass_input1 = $('.btn_gen_pass_input1').val();
+			var pass_input2 = $('.btn_gen_pass_input2').val();
+			//console.log(pass_input1);
+			//console.log(pass_input2);
+
+			if (pass_input1 !== pass_input2){
+				$('.btn_gen_pass_regenpass_login').attr("disabled", "disabled");
+			} else {
+				$('.btn_gen_pass_regenpass_login').removeAttr("disabled");
+			}
+
+		});
+
+
+	});
+
+
+});
+
 $('.login-btn').click(function(e) {
 	e.preventDefault();
 	var passphrase = $('.loginPassphrase').val();
@@ -83,7 +183,7 @@ CheckMMStatus = function(sig) {
 		});
 
 		check_coin_balance(false);
-		CheckOrderbook_Interval = setInterval(CheckOrderBookFn,3000);
+		CheckOrderbook_Interval = setInterval(CheckOrderBookFn,15000);
 		check_swap_status_Internal = setInterval(check_swap_status,10000);
 		check_swap_status();
 		check_bot_list_Internal = setInterval(check_bot_list, 60000);

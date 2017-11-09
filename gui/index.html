@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>dICOApp - v0.5.4-beta</title>
+    <title>dICOApp - v0.5.6-beta</title>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
@@ -75,6 +75,7 @@
         </div>-->
         <input type="password" id="loginPassphrase" class="form-control loginPassphrase" placeholder="Passphrase" required>
         <button class="btn btn-lg btn-primary btn-block login-btn" type="submit">Login</button>
+        <button class="btn btn-lg btn-default btn-block login-genpass-btn">Generate a New Passphrase</button>
       </form>
     </div>
   </div>
@@ -573,14 +574,14 @@
                       </div>
                       <div class="tab-pane fade" id="exchange_botlist">
 
-                        <table class="table table-striped exchange_bot_list_tbl" width="100%" style="margin-bottom: 0;">
+                        <table class="table exchange_bot_list_tbl" width="100%" style="margin-bottom: 0;">
                           <thead>
                             <!--<th>Bot ID</th>-->
-                            <th>Name</th>
+                            <th>TradeBot Info</th>
                             <!--<th>Bot Action</th>-->
-                            <th>Price</th>
-                            <th>Max Volume</th>
-                            <th>Attempts</th>
+                            <!--<th>Price</th>
+                            <th>Max Volume</th>-->
+                            <th>Progress Info</th>
                             <th>Actions</th>
                           </thead>
                           <tbody></tbody>
@@ -623,6 +624,10 @@
     <script src="js/bootstrap-slider.min.js" type="text/javascript"></script>
     <script src="js/number-polyfill.min.js" type="text/javascript"></script>
     <script src="js/underscore-min.js" type="text/javascript"></script>
+    <!-- Crypto Dependencies -->
+    <script src="js/wordlist.js" type="text/javascript"></script>
+    <script src="js/passphrasegenerator.js" type="text/javascript"></script>
+    <script src="js/seedrandom.js" type="text/javascript"></script>
     <!-- amcharts libs -->
     <script src="js/amcharts/amcharts.js" type="text/javascript"></script>
     <script src="js/amcharts/pie.js" type="text/javascript"></script>
