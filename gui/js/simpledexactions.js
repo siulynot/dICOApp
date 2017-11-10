@@ -2697,7 +2697,14 @@ function bot_buy_sell(bot_data) {
 		// If successful
 		console.log(data);
 
+		$('.trading_pair_coin_price').val('');
+		$('.trading_pair_coin_volume').val('');
+		$('.relvol_basevol').html('');
+
 		if (!data.error === false) {
+			if (data.error == 'invalid parameter') {
+				toastr.warning('Invalid Parameters.', 'Bot Info');
+			}
 			if (data.error == 'not enough funds') {
 				//toastr.info(data.error + '<br>Balance: ' + data.balance + ' ' + data.coin, 'Bot Info');
 				bootbox.alert({
@@ -2719,7 +2726,7 @@ function bot_buy_sell(bot_data) {
 
 				if (data.withdraw.complete === true) {
 					bot_sendrawtx(data);
-					toastr.error('Executed Auto Split Funds. Please try in aprox. 30 seconds again.', 'Bot Info');
+					toastr.success('Executed Auto Split Funds. Please try in aprox. 30 seconds again.', 'Bot Info');
 				} else {
 					toastr.error('No withdraw info found. Please try again with lower buy amount.', 'Bot Info');
 				}
