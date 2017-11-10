@@ -2166,6 +2166,10 @@ function manual_buy_sell(mt_data) {
 			if (data.error == 'cant find ordermatch utxo, need to change relvolume to be closer to available') {
 				toastr.error(data.error, 'Trade Info');
 			}
+			if (data.error == 'only one pending request at a time') {
+				toastr.error(data.error + "<br>Make sure you don't have trading bot or another trade running.", 'Trade Info');
+
+			}
 		} else if (data.result == 'success') {
 			toastr.success('Order Executed', 'Trade Info');
 		}
@@ -2196,12 +2200,9 @@ function setOrderPrice(trade_data) {
 	}
 	if(bot_or_manual == 'trademanual') {
 
-		$('.trading_pair_coin_volume').val(trade_data.maxvolume);
-
 		pair_volume = trade_data.maxbuy;
-
-		$('.relvol_basevol').html(pair_volume.toFixed(8));
-
+		$('.trading_pair_coin_volume').val(pair_volume.toFixed(8));
+		$('.relvol_basevol').html(trade_data.maxvolume);
 		$('.trading_pair_destpubkey').val(trade_data.pubkey);
 	}
 
