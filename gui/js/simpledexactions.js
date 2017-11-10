@@ -2297,7 +2297,7 @@ $('.your_coins_balance_info').on('click', '.coin_balance_receive', function() {
 		    //title: 'A custom dialog with init',
 		  onEscape: true,
 		  backdrop: true,
-			message: '<div style="text-align: center; margin-top: -40px;"><img src="img/cryptologo/'+coin+'.png" style="border: 10px solid #fff;border-radius: 50px; background: #fff;"/></div><div style="text-align: center;"><div id="receive_addr_qrcode"></div><pre style="font-size: 18px;">'+data.coin.smartaddress+'</pre class="receive_addr_qrcode_addr"></div>'
+			message: '<div style="text-align: center; margin-top: -40px;"><img src="img/cryptologo/'+coin+'.png" style="border: 10px solid #fff;border-radius: 50px; background: #fff;"/></div><div style="text-align: center;"><div id="receive_addr_qrcode"></div><blockquote style="font-size: 15px; font-weight: 400; color: #c10a0a; background-color: #ffd5d5; #7d0b0b; border-left: 5px solid #f00;">If you are sending a transaction to your barterDEX smartaddress, then <b>please send 3 small transactions instead of 1 big transaction</b> for best experience.</blockquote><pre style="font-size: 18px;">'+data.coin.smartaddress+'</pre class="receive_addr_qrcode_addr"></div>'
 		});
 
 		var qrcode = new QRCode("receive_addr_qrcode");
@@ -2705,14 +2705,19 @@ function bot_buy_sell(bot_data) {
 					message: `<p>Not a problem. I have executed the recommended command to make required UTXOs for you.</p>
 					<p>If you see some outgoing transactions from your barterDEX smartaddress that's sent to the same smartaddress of yours to create some inventory transactions for barterDEX to make required trades.<br>
 					Please try in a moment with same or different volume and you should be all good to go.</p>
-					<p>If you are still getting the same error again, please try the "Inventory" button under the coin's logo where you see it's balance.<br>
-					That will give you good overview what exactly UTXO means and what you need to do to fix this error.</p>`});
+					<p>If you are still getting the same error again, here are few things you can try:</>
+					<ul>
+					<li>Please try the "Inventory" button under the coin's logo where you see it's balance.<br>
+					That will give you good overview what exactly UTXO means and what you need to do to fix this error.</li>
+					<li>Try lower amount of buy which makes final cost in total lower.</li>
+					<li>Logout and login back and try lower amount of buy counts total cost lower than previous attempt.</li>
+					</ul>`});
 				console.log(JSON.stringify(data))
 
 				if (data.withdraw.complete === true) {
-					bot_sendrawtx(data.withdraw);
+					bot_sendrawtx(data);
 				} else {
-					toastr.error('No withdraw info found. Please try again.', 'Bot Info');
+					toastr.error('No withdraw info found. Please try again with lower buy amount.', 'Bot Info');
 				}
 			}
 		} else if (data.result == 'success') {
@@ -2728,16 +2733,15 @@ function bot_buy_sell(bot_data) {
 
 function bot_sendrawtx(bot_data) {
 	console.log(bot_data);
-	console.log(bot_data.hex)
-	var selected_coin = JSON.parse(sessionStorage.getItem('mm_selectedcoin'));
-	var coin = selected_coin.coin;
+	console.log(bot_data.withdraw.hex)
+	var coin = bot_data.coin;
 	console.log(coin);
 
 
 
 	var userpass = sessionStorage.getItem('mm_userpass');
 	var mypubkey = sessionStorage.getItem('mm_mypubkey');
-	var ajax_data = {"userpass":userpass,"method":"sendrawtransaction","coin": coin, "signedtx": bot_data.hex};
+	var ajax_data = {"userpass":userpass,"method":"sendrawtransaction","coin": coin, "signedtx": bot_data.withdraw.hex};
 	var url = "http://127.0.0.1:7783";
 
 	console.log(ajax_data);
