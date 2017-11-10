@@ -52,6 +52,8 @@ $(document).ready(function() {
 
 //---- dICO App Settings END ----//
 
+		$('.trading_selected_trader_label').hide();
+		$('.trading_selected_trader').hide();
 		$('.relvol_basevol_coin').html($('.trading_pair_coin').selectpicker('val'));
 
 	} else {
@@ -649,22 +651,52 @@ $('.btn-bot_action').click(function(e){
 	console.log($(this).data());
 	console.log($(this).data('action'));
 
-	pair_price = $('.trading_pair_coin_price').val();
+	bot_or_manual = $('input[name=trading_mode_options]:checked').val();
 
-	base_volume = $('.trading_pair_coin_volume').val();
+	if (bot_or_manual == 'tradebot') {
 
-	pair_volume = pair_price * base_volume;
+		pair_price = $('.trading_pair_coin_price').val();
 
-	$('.relvol_basevol').html(pair_volume.toFixed(8));
+		base_volume = $('.trading_pair_coin_volume').val();
 
-	bot_data = {}
-	bot_data.price = pair_price;
-	bot_data.volume = pair_volume;
-	bot_data.action = $(this).data('action');
+		pair_volume = pair_price * base_volume;
 
-	console.log(bot_data);
+		$('.relvol_basevol').html(pair_volume.toFixed(8));
 
-	bot_buy_sell(bot_data);
+		bot_data = {}
+		bot_data.price = pair_price;
+		bot_data.volume = pair_volume;
+		bot_data.action = $(this).data('action');
+
+		console.log(bot_data);
+
+		bot_buy_sell(bot_data);
+
+	} else if (bot_or_manual == 'trademanual') {
+
+		pair_price = $('.trading_pair_coin_price').val();
+
+		base_volume = $('.trading_pair_coin_volume').val();
+
+		pair_volume = pair_price * base_volume;
+
+		$('.relvol_basevol').html(pair_volume.toFixed(8));
+
+		trader_only = $('.trading_pair_destpubkey_yesno').is(":checked");
+		trader_pubkey = $('.trading_pair_destpubkey').val();
+
+		trade_data = {}
+		trade_data.price = pair_price;
+		trade_data.volume = pair_volume;
+		trade_data.trader_only = trader_only;
+		trade_data.destpubkey = trader_pubkey;
+		trade_data.action = $(this).data('action');
+
+		//console.log(trade_data);
+
+		manual_buy_sell(trade_data)
+
+	}
 });
 
 $('.trading_pair_coin_price').keyup(function(){
@@ -2006,11 +2038,171 @@ $('.portfolio_set_autogoals_btn').click(function() {
 /* Portfolio section functions END */
 
 
+/* Manual Tradeing */
+
+$('input[name=trading_mode_options]').change(function() {
+	console.log('trading_mode_options changed');
+
+	bot_or_manual = $('input[name=trading_mode_options]:checked').val();
+	//console.log(bot_or_manual);
+
+	if(bot_or_manual == 'tradebot') {
+		$('#trading_pair_coin_price_max_min').html('Max');
+		$('.trading_pair_lable_text_one').html('Max');
+		$('.trading_pair_lable_text_two').html('Buy');
+		$('.btn-bot_action').html('BUY');
+		$('.btn-bot_action').attr('data-action', 'buy');
+		$('.trading_selected_trader_label').hide();
+		$('.trading_selected_trader').hide();
+	}
+	if(bot_or_manual == 'trademanual') {
+		//$('#trading_pair_coin_price_max_min').html('Min');
+		$('.trading_pair_lable_text_one').html('');
+		//$('.trading_pair_lable_text_two').html('Sell');
+		//$('.btn-bot_action').html('SELL');
+		//$('.btn-bot_action').attr('data-action', 'sell');
+		$('.trading_selected_trader_label').show();
+		$('.trading_selected_trader').show();
+	}
+});
+
+
+function manual_buy_sell(mt_data) {
+	console.log(mt_data);
+	var selected_coin = JSON.parse(sessionStorage.getItem('mm_selectedcoin'));
+	var coin = selected_coin.coin;
+	//console.log(coin);
+
+	buying_or_selling = $('input[name=trading_pair_options]:checked').val();
+
+	/*if(buying_or_selling == 'buying') {
+		var base_coin = coin;
+		var rel_coin = $('.trading_pair_coin').selectpicker('val');
+	}
+	if(buying_or_selling == 'selling') {
+		var base_coin = $('.trading_pair_coin').selectpicker('val');
+		var rel_coin = coin;
+	}*/
+
+	var base_coin = coin;
+	var rel_coin = $('.trading_pair_coin').selectpicker('val');
+
+	console.log('BUYING or SELLING??: ' + buying_or_selling);
+	console.log('BASE: ' + base_coin);
+	console.log('REL: '+ rel_coin);
+
+	var userpass = sessionStorage.getItem('mm_userpass');
+	var mypubkey = sessionStorage.getItem('mm_mypubkey');
+
+	if (mt_data.action == 'buy') {
+		var ajax_data = {"userpass":userpass,"method":"buy","base":base_coin,"rel":rel_coin,"price":mt_data.price,"relvolume":mt_data.volume};
+		if (mt_data.trader_only == true) {
+			ajax_data.destpubkey = mt_data.destpubkey;
+		}
+	}
+	if (mt_data.action == 'sell') {
+		var ajax_data = {"userpass":userpass,"method":"sell","base":base_coin,"rel":rel_coin,"price":mt_data.price,"basevolume":mt_data.volume};
+		if (mt_data.trader_only == true) {
+			ajax_data.destpubkey = mt_data.destpubkey;
+		}
+	}
+
+	console.log(ajax_data);
+
+	console.log(JSON.stringify(ajax_data));
+
+	var url = "http://127.0.0.1:7783";
+
+	$.ajax({
+	    data: JSON.stringify(ajax_data),
+	    dataType: 'json',
+	    type: 'POST',
+	    url: url
+	}).done(function(data) {
+		// If successful
+		console.log(data);
+
+		$('.trading_pair_coin_price').val('');
+		$('.trading_pair_coin_volume').val('');
+		$('.trading_pair_destpubkey').val('');
+		$('.relvol_basevol').html('');
+
+		if (!data.error === false) {
+			if (data.error == 'invalid parameter') {
+				toastr.warning('Invalid Parameters.', 'Trade Info');
+			}
+			if (data.error == 'not enough funds') {
+				//toastr.info(data.error + '<br>Balance: ' + data.balance + ' ' + data.coin, 'Bot Info');
+				bootbox.alert({
+					backdrop: true,
+					onEscape: true,
+					title: `Looks like you don't have enough UTXOs in your balance.`,
+					message: `<p>Not a problem. I have executed the recommended command to make required UTXOs for you.</p>
+					<p>If you see the message saying "Executed Auto Split Funds", then please wait for approx. 30 seconds to 1 minute before trying again.</p>
+					<p>If you see some outgoing transactions from your barterDEX smartaddress that's sent to the same smartaddress of yours to create some inventory transactions for barterDEX to make required trades.<br>
+					Please try in a moment with same or different volume and you should be all good to go.</p>
+					<p>If you are still getting the same error again, here are few things you can try:</>
+					<ul>
+					<li>Please try the "Inventory" button under the coin's logo where you see it's balance.<br>
+					That will give you good overview what exactly UTXO means and what you need to do to fix this error.</li>
+					<li>Try lower amount of buy which makes final cost in total lower.</li>
+					<li>Logout and login back and try lower amount of buy counts total cost lower than previous attempt.</li>
+					</ul>`});
+				console.log(JSON.stringify(data))
+
+				/*if (data.withdraw.complete === true) {
+					//bot_sendrawtx(data);
+					toastr.success('Executed Auto Split Funds. Please try in approx. 30 seconds again.', 'Bot Info');
+				} else {
+					toastr.error('No withdraw info found. Please try again with lower buy amount.', 'Bot Info');
+				}*/
+			}
+			if (data.error == 'cant find alice utxo that is big enough') {
+				toastr.error(data.error, 'Trade Info');
+			}
+			if (data.error == 'cant find ordermatch utxo, need to change relvolume to be closer to available') {
+				toastr.error(data.error, 'Trade Info');
+			}
+			if (data.error == 'only one pending request at a time') {
+				toastr.error(data.error + "<br>Make sure you don't have trading bot or another trade running.", 'Trade Info');
+
+			}
+		} else if (data.result == 'success') {
+			toastr.success('Order Executed', 'Trade Info');
+		}
+	}).fail(function(jqXHR, textStatus, errorThrown) {
+	    // If fail
+	    console.log(textStatus + ': ' + errorThrown);
+	});
+}
+
+
+
+/* Manual Tradeing END */
+
+
 
 /* Auto Trading Bot */
 
-function setOrderPrice(price) {
-	$('.trading_pair_coin_price').val(price);
+function setOrderPrice(trade_data) {
+	console.log(trade_data);
+	//trade_data = JSON.parse(trade_data);
+	//console.log(trade_data);
+	$('.trading_pair_coin_price').val(trade_data.price);
+
+	bot_or_manual = $('input[name=trading_mode_options]:checked').val();
+
+	if(bot_or_manual == 'tradebot') {
+
+	}
+	if(bot_or_manual == 'trademanual') {
+
+		pair_volume = trade_data.maxbuy;
+		$('.trading_pair_coin_volume').val(pair_volume.toFixed(8));
+		$('.relvol_basevol').html(trade_data.maxvolume);
+		$('.trading_pair_destpubkey').val(trade_data.pubkey);
+	}
+
 }
 
 function CheckOrderBookFn(sig) {
@@ -2087,6 +2279,10 @@ function CheckOrderBookFn(sig) {
 			})
 
 			$('.orderbook_asks tbody').empty();
+			if (data.asks &&
+					data.asks.length) {
+				$('#orderbook-asks-spinner').hide();
+			}
 			$.each(data.asks, function(index, val) {
 				//console.log(index);
 				//console.log(val);
@@ -2094,8 +2290,16 @@ function CheckOrderBookFn(sig) {
 				if (val.pubkey === mypubkey) {
 					var mytrade_true = 'class="warning"';
 				}
+
+				row_trade_data = {};
+				row_trade_data.price = val.price;
+				row_trade_data.minvolume = val.minvolume;
+				row_trade_data.maxvolume = val.maxvolume;
+				row_trade_data.numutxos = val.numutxos;
+				row_trade_data.maxbuy = val.maxvolume / val.price;
+				row_trade_data.pubkey = val.pubkey;
 				var orderbook_asks_tr = '';
-				orderbook_asks_tr += '<tr ' + mytrade_true + ' onclick=\"setOrderPrice(' + val.price + ')\"">';
+				orderbook_asks_tr += '<tr ' + mytrade_true + ' onclick=setOrderPrice(' + JSON.stringify(row_trade_data) + ')>';
 				orderbook_asks_tr += '<td>' + val.price + '</td>';
 				orderbook_asks_tr += '<td>' + val.minvolume + '</td>';
 				orderbook_asks_tr += '<td>' + val.maxvolume + '</td>';
@@ -2645,7 +2849,7 @@ function check_bot_list(sig) {
 						exchange_bot_list_tr += `<td>
 													<div style="font-size: 14px; font-weight: 200;">
 													<span><font style="font-weight: 400;">Total to Buy:</font> `+val.totalbasevolume+` `+val.base+`</span><br>
-													<span><font style="font-weight: 400;">Total Bought:</font> `+ bot_progress_data.total.toFixed(8) +` `+val.base+`</span><br>
+													<!--<span><font style="font-weight: 400;">Total Bought:</font> `+ bot_progress_data.total.toFixed(8) +` `+val.base+`</span><br>-->
 													<span><font style="font-weight: 400;">Trade Attempts:</font> `+val.trades.length+`</span>
 													</div>
 												</td>`;
@@ -2728,7 +2932,7 @@ function bot_buy_sell(bot_data) {
 					onEscape: true,
 					title: `Looks like you don't have enough UTXOs in your balance.`,
 					message: `<p>Not a problem. I have executed the recommended command to make required UTXOs for you.</p>
-					<p>If you see the message saying "Executed Auto Split Funds", then please wait for aprox 30 seconds to 1 minute before trying again.</p>
+					<p>If you see the message saying "Executed Auto Split Funds", then please wait for approx. 30 seconds to 1 minute before trying again.</p>
 					<p>If you see some outgoing transactions from your barterDEX smartaddress that's sent to the same smartaddress of yours to create some inventory transactions for barterDEX to make required trades.<br>
 					Please try in a moment with same or different volume and you should be all good to go.</p>
 					<p>If you are still getting the same error again, here are few things you can try:</>
@@ -2742,7 +2946,7 @@ function bot_buy_sell(bot_data) {
 
 				if (data.withdraw.complete === true) {
 					bot_sendrawtx(data);
-					toastr.success('Executed Auto Split Funds. Please try in aprox. 30 seconds again.', 'Bot Info');
+					toastr.success('Executed Auto Split Funds. Please try in approx. 30 seconds again.', 'Bot Info');
 				} else {
 					toastr.error('No withdraw info found. Please try again with lower buy amount.', 'Bot Info');
 				}
@@ -3038,7 +3242,7 @@ function bot_status(bot_data) {
 						</tr>
 						<tr>
 							<td>Trades Attempts</td>
-							<td>` + renderTradeAttempts(data.trades) + `</td>
+							<td><div style="max-height: 450px; overflow: scroll;">` + renderTradeAttempts(data.trades) + `</div></td>
 						</tr>
 					</table>
 
@@ -3238,6 +3442,8 @@ function bot_screen_sellcoin_balance(sig) {
 				</span>`;
 				$('.trading_sellcoin_ticker_name').html('<img src="img/cryptologo/'+coin.toLowerCase()+'.png" style="width: 30px;"> '+ return_coin_name(coin) + ' ('+coin+')'+button_controls);
 				$('.trading_sellcoin_balance').html('Coin is disabled');
+				$('#balance-spinner').hide();
+				$('.balance-block').show();
 			} else {
 				var button_controls = `<br>
 				<span>
@@ -3248,6 +3454,8 @@ function bot_screen_sellcoin_balance(sig) {
 				</span>`;
 				$('.trading_sellcoin_ticker_name').html('<img src="img/cryptologo/'+coin.toLowerCase()+'.png" style="width: 30px;"> '+ return_coin_name(coin) + ' ('+coin+')'+button_controls);
 				$('.trading_sellcoin_balance').html(data.coin.balance + ' <span style="font-size: 60%; font-weight: 100;">' + coin + '</span><br><span style="font-size: 50%; font-weight: 200;">' + data.coin.smartaddress + '</span>');
+				$('#balance-spinner').hide();
+				$('.balance-block').show();
 			}
 		}
 
@@ -3369,6 +3577,7 @@ function check_swap_status_details(swap_data) {
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
 			get_coin_info(_coin);
 		} else {
+			$('#exchange-swap-status-spinner').hide();
 			result_answer = (data.result == 'success') ? '<h4><span class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Success</span></h4>' : '<h4><span class="label label-danger"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> ' + data.result + '</span></h4>';
 			alice_answer = '<img src="img/cryptologo/'+data.alice.toLowerCase()+'.png" style="width: 30px;"> '+ return_coin_name(data.alice) + ' ('+data.alice+')';
 			bob_answer = '<img src="img/cryptologo/'+data.bob.toLowerCase()+'.png" style="width: 30px;"> '+ return_coin_name(data.bob) + ' ('+data.bob+')';

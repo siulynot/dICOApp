@@ -282,8 +282,8 @@
     <div class="screen-inventory" style="display: none;">
       <div class="col-sm-12">
         <p>This screen shows you option to manage your coin's inventory. What is coin inventory?</p>
-        <p>Evey crypto currency wallet is very much like your regular phisical wallet. Just like in your physical wallet if you have different currency notes and coins available, that means they are not spent. You can spend them. If you use the same analogy in crypto currency, these unspent notes and coins can be referred as <b><i>unspent transactions.</i></b> In tiny bit technical term it's called <b>U</b>nspent <b>T</b>ransaction <b>O</b>utput, in short <b>UTXO</b></p>
-        <p>The decentralised Exchange doesn't run on total balance of your crypto currency wallet. It needs small unspent transctions. So, if you have sent a big transction to your BarterDEX smart address, you can use this screen to split your balance to number of small UTXOs.</p>
+        <p>Every crypto currency wallet is very much like your regular phisical wallet. Just like in your physical wallet if you have different currency notes and coins available, that means they are not spent. You can spend them. If you use the same analogy in crypto currency, these unspent notes and coins can be referred as <b><i>unspent transactions.</i></b> In tiny bit technical term it's called <b>U</b>nspent <b>T</b>ransaction <b>O</b>utput, in short <b>UTXO</b></p>
+        <p>The decentralised Exchange doesn't run on total balance of your crypto currency wallet. It needs small unspent transactions. So, if you have sent a big transaction to your BarterDEX smart address, you can use this screen to split your balance to number of small UTXOs.</p>
         <p>By clicking <i>Make Inventory</i> button it will split your smart address balance to number of UTXOs and send them back to your smart address. It will cost regular transaction fee to split your smart address balance.</p>
 
       </div>
@@ -433,7 +433,12 @@
                                 <th>UTXOs</th></thead>
                               <tbody></tbody>
                             </table>
-
+                            <svg id="orderbook-asks-spinner">
+                              <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+                              <circle class="path2" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+                              <circle class="path3" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+                              <circle class="path4" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+                            </svg>
                           </div>
                           <div class="tab-pane fade" id="exchange_coin_bids">
 
@@ -467,7 +472,14 @@
                     <th>Action</th>
                   </thead>
                   <tbody>
-                    <th><div style="text-align: center;">Loading...</div></th>
+                    <th>
+                      <svg id="exchange-swap-status-spinner">
+                        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+                        <circle class="path2" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+                        <circle class="path3" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+                        <circle class="path4" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+                      </svg>
+                    </th>
                   </tbody>
                 </table>
               </div>
@@ -478,117 +490,151 @@
       </div>
 
       <div class="col-sm-6">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title"><strong>Trading Pair</strong></h3>
-            <button class="btn btn-xs btn-refreshtrading_pair coinexchange" data-coin="COIN" style="float: right; margin: -20px -8px;"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
-          </div>
-          <div class="panel-body"> <!-- panel-body -->
-
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="form-group" style="display: none;">
-                  <div class="btn-group btn-group-justified colors" data-toggle="buttons">
-                    <label class="btn btn-lg btn-info active">
-                      <input type="radio" name="trading_pair_options" id="trading_pair_options" value="buying" autocomplete="off" checked> BUYING <span class="coin_ticker"></span></label>
-                    <label class="btn btn-lg btn-info">
-                      <input type="radio" name="trading_pair_options" id="trading_pair_options" value="selling" autocomplete="off"> SELLING <span class="coin_ticker"></span></label>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <span style="float: left; font-size: 18px;"><span class="trading_pair_lable_text_one">Max</span> Price to <span class="trading_pair_lable_text_two">Buy</span></span>
-                </div>
-                <div class="input-group col-sm-12">
-                  <select class="selectpicker trading_pair_coin" data-live-search="true" data-hide-disabled="true" data-width="30%"></select>
-                  <input type="number" class="form-control trading_pair_coin_price" placeholder="Price e.g. 0.01" style="height: 64px; font-size: 20px;">
-                  <span class="input-group-addon" id="trading_pair_coin_price_max_min" style="font-size: 20px;">Max</span>
-                </div>
-                <div class="form-group" style="margin-top: 15px; margin-bottom: 0px;">
-                  <span style="font-size: 18px;"><span>Max</span> Amount to <span class="trading_pair_lable_text_two">Buy</span></span>
-                </div>
-                <div class="input-group col-sm-12">
-                  <span class="input-group-addon coin_ticker" id="trading_pair_coin_ticker" style="font-size: 20px;"></span>
-                  <input type="number" class="form-control trading_pair_coin_volume" placeholder="Amount e.g. 12.5" style="height: 64px; font-size: 20px;">
-                  <span class="input-group-btn">
-                    <button class="btn btn-primary btn-bot_action" data-action="buy" style="height: 64px; font-size: 20px;">BUY</button>
-                  </span>
-                </div>
-                <div class="input-group col-sm-12">
-                  <span class="input-group-addon" style="font-size: 30px; font-weight: 200; border: 0; background-color: #fff;">It'll cost you</span>
-                  <span class="input-group-addon" style="font-size: 40px; font-weight: 100; border: 0; background-color: #fff;"><span class="relvol_basevol">0</span> <span class="relvol_basevol_coin" style="font-size: 25px; background-color: #fff; font-weight: 100;"></span></span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <div class="col-sm-6">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title"><strong>Your Balance</strong></h3>
-            <!--<button class="btn btn-xs btn-info btn-activatecoins portfolio" style="float: right; margin: -20px -8px;">ADD COINS <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>-->
-            <button class="btn btn-xs btn-trading_coin_balance_refresh coinexchange" data-coin="COIN" style="float: right; margin: -20px -8px"><span class="glyphicon glyphicon-refresh"></span></button>
-          </div>
-          <div id="balance-block"> <!-- panel-body -->
-            <div class="input-group col-sm-12 your_coins_balance_info">
-              <span class="input-group-addon trading_sellcoin_ticker_name" style="font-size: 20px; text-align: left; background-color: #fff; border-radius: 0px;"></span>
-              <span class="input-group-addon trading_sellcoin_balance" style="font-size: 220%; font-weight: 100; text-align: right; background-color: #fff; border-radius: 0px;"></span>
-            </div>
-            <div class="input-group col-sm-12 your_coins_balance_info">
-              <span class="input-group-addon trading_coin_ticker_name" style="font-size: 20px; text-align: left; background-color: #fff; border-radius: 0px;"></span>
-              <span class="input-group-addon trading_coin_balance" style="font-size: 220%; font-weight: 100; text-align: right; background-color: #fff; border-radius: 0px;"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="col-sm-6">
-        <div class="panel with-nav-tabs panel-default">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="panel panel-default">
               <div class="panel-heading">
-                <!--<button class="btn btn-xs btn-exchangeclose coinexchange" data-coin="COIN" style="float: right; margin: 6px 6px 0px 3px;">BACK</button>
-                <button class="btn btn-xs btn-exchangerefresh coinexchange" data-coin="COIN" style="float: right; margin: 6px 6px 0px 3px;"><span class="glyphicon glyphicon-refresh"></span></button>-->
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#exchange_myorders" data-toggle="tab">My Orders <button class="btn btn-xs btn-myordersrefresh coinexchange" data-coin="COIN"><span class="glyphicon glyphicon-refresh"></span></button></a></li>
-                    <li><a href="#exchange_botlist" data-toggle="tab">Auto Traders List <button class="btn btn-xs btn-botlistrefresh coinexchange" data-coin="COIN"><span class="glyphicon glyphicon-refresh"></span></button></a></li>
-                </ul>
+                <h3 class="panel-title"><strong>Trading Pair</strong></h3>
+                <button class="btn btn-xs btn-refreshtrading_pair coinexchange" data-coin="COIN" style="float: right; margin: -20px -8px;"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
               </div>
-              <div class=""> <!-- panel-body -->
-                  <div class="tab-content">
-                      <div class="tab-pane fade in active" id="exchange_myorders">
+              <div class="panel-body"> <!-- panel-body -->
 
-                        <table class="table table-striped exchange_my_orders_tbl" style="margin-bottom: 0;">
-                          <thead>
-                            <th>Base</th>
-                            <th>Rel</th>
-                            <th>Bid</th>
-                            <th>Ask</th>
-                          </thead>
-                          <tbody>
-                            <th><div style="text-align: center;">Loading...</div></th>
-                          </tbody>
-                        </table>
-
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group" style="display: none;">
+                      <div class="btn-group btn-group-justified colors" data-toggle="buttons">
+                        <label class="btn btn-lg btn-info active">
+                          <input type="radio" name="trading_pair_options" id="trading_pair_options" value="buying" autocomplete="off" checked> BUYING <span class="coin_ticker"></span></label>
+                        <label class="btn btn-lg btn-info">
+                          <input type="radio" name="trading_pair_options" id="trading_pair_options" value="selling" autocomplete="off"> SELLING <span class="coin_ticker"></span></label>
                       </div>
-                      <div class="tab-pane fade" id="exchange_botlist">
+                    </div>
+                    <div class="form-group">
+                      <div class="btn-group btn-group-justified colors" data-toggle="buttons">
+                        <label class="btn btn-lg btn-warning active">
+                          <input type="radio" name="trading_mode_options" id="trading_mode_options" value="tradebot" autocomplete="off" checked> TRADE BOT</label>
+                        <label class="btn btn-lg btn-warning">
+                          <input type="radio" name="trading_mode_options" id="trading_mode_options" value="trademanual" autocomplete="off"> MANUAL TRADING</label>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <span style="float: left; font-size: 18px;"><span class="trading_pair_lable_text_one">Max</span> Price to <span class="trading_pair_lable_text_two">Buy</span></span>
+                    </div>
+                    <div class="input-group col-sm-12">
+                      <select class="selectpicker trading_pair_coin" data-live-search="true" data-hide-disabled="true" data-width="30%"></select>
+                      <input type="number" class="form-control trading_pair_coin_price" placeholder="Price e.g. 0.01" style="height: 64px; font-size: 20px;">
+                      <span class="input-group-addon" id="trading_pair_coin_price_max_min" style="font-size: 20px;">Max</span>
+                    </div>
 
-                        <table class="table exchange_bot_list_tbl" width="100%" style="margin-bottom: 0;">
-                          <thead>
-                            <!--<th>Bot ID</th>-->
-                            <th>TradeBot Info</th>
-                            <!--<th>Bot Action</th>-->
-                            <!--<th>Price</th>
-                            <th>Max Volume</th>-->
-                            <th>Progress Info</th>
-                            <th>Actions</th>
-                          </thead>
-                          <tbody></tbody>
-                        </table>
+                    <div class="form-group trading_selected_trader_label" style="margin-top: 15px; margin-bottom: 0px;">
+                      <span style="font-size: 18px;">Trade with selected trader only (optional)</span>
+                    </div>
+                    <div class="input-group col-sm-12 trading_selected_trader">
+                      <span class="input-group-addon">
+                        <input class="big-checkbox trading_pair_destpubkey_yesno" type="checkbox"> Yes
+                      </span>
+                      <input type="text" class="form-control trading_pair_destpubkey" placeholder="eg. bab6ad2eebe1e666369cab504d4622b22c1f1ef718ef388e88020f30a1573e01" style="height: 64px; font-size: 20px;">
+                    </div>
+
+                    <div class="form-group" style="margin-top: 15px; margin-bottom: 0px;">
+                      <span style="font-size: 18px;"><span>Max</span> Amount to <span class="trading_pair_lable_text_two">Buy</span></span>
+                    </div>
+                    <div class="input-group col-sm-12">
+                      <span class="input-group-addon coin_ticker" id="trading_pair_coin_ticker" style="font-size: 20px;"></span>
+                      <input type="number" class="form-control trading_pair_coin_volume" placeholder="Amount e.g. 12.5" style="height: 64px; font-size: 20px;">
+                      <span class="input-group-btn">
+                        <button class="btn btn-primary btn-bot_action" data-action="buy" style="height: 64px; font-size: 20px;">BUY</button>
+                      </span>
+                    </div>
+
+                    <div class="input-group col-sm-12">
+                      <span class="input-group-addon" style="font-size: 30px; font-weight: 200; border: 0; background-color: #fff;">It'll cost you</span>
+                      <span class="input-group-addon" style="font-size: 40px; font-weight: 100; border: 0; background-color: #fff;"><span class="relvol_basevol">0</span> <span class="relvol_basevol_coin" style="font-size: 25px; background-color: #fff; font-weight: 100;"></span></span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title"><strong>Your Balance</strong></h3>
+                <!--<button class="btn btn-xs btn-info btn-activatecoins portfolio" style="float: right; margin: -20px -8px;">ADD COINS <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>-->
+                <button class="btn btn-xs btn-trading_coin_balance_refresh coinexchange" data-coin="COIN" style="float: right; margin: -20px -8px"><span class="glyphicon glyphicon-refresh"></span></button>
+              </div>
+              <div> <!-- panel-body -->
+                <svg id="balance-spinner">
+                  <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+                  <circle class="path2" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+                  <circle class="path3" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+                  <circle class="path4" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"/>
+                </svg>
+                <div class="balance-block">
+                  <div class="input-group col-sm-12 your_coins_balance_info">
+                    <span class="input-group-addon trading_sellcoin_ticker_name" style="font-size: 20px; text-align: left; background-color: #fff; border-radius: 0px;"></span>
+                    <span class="input-group-addon trading_sellcoin_balance" style="font-size: 220%; font-weight: 100; text-align: right; background-color: #fff; border-radius: 0px;"></span>
+                  </div>
+                  <div class="input-group col-sm-12 your_coins_balance_info">
+                    <span class="input-group-addon trading_coin_ticker_name" style="font-size: 20px; text-align: left; background-color: #fff; border-radius: 0px;"></span>
+                    <span class="input-group-addon trading_coin_balance" style="font-size: 220%; font-weight: 100; text-align: right; background-color: #fff; border-radius: 0px;"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-sm-12">
+            <div class="panel with-nav-tabs panel-default">
+                  <div class="panel-heading">
+                    <!--<button class="btn btn-xs btn-exchangeclose coinexchange" data-coin="COIN" style="float: right; margin: 6px 6px 0px 3px;">BACK</button>
+                    <button class="btn btn-xs btn-exchangerefresh coinexchange" data-coin="COIN" style="float: right; margin: 6px 6px 0px 3px;"><span class="glyphicon glyphicon-refresh"></span></button>-->
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#exchange_myorders" data-toggle="tab">My Orders <button class="btn btn-xs btn-myordersrefresh coinexchange" data-coin="COIN"><span class="glyphicon glyphicon-refresh"></span></button></a></li>
+                        <li><a href="#exchange_botlist" data-toggle="tab">Auto Traders List <button class="btn btn-xs btn-botlistrefresh coinexchange" data-coin="COIN"><span class="glyphicon glyphicon-refresh"></span></button></a></li>
+                    </ul>
+                  </div>
+                  <div class=""> <!-- panel-body -->
+                      <div class="tab-content">
+                          <div class="tab-pane fade in active" id="exchange_myorders">
+
+                            <table class="table table-striped exchange_my_orders_tbl" style="margin-bottom: 0;">
+                              <thead>
+                                <th>Base</th>
+                                <th>Rel</th>
+                                <th>Bid</th>
+                                <th>Ask</th>
+                              </thead>
+                              <tbody>
+                                <th><div style="text-align: center;">Loading...</div></th>
+                              </tbody>
+                            </table>
+
+                          </div>
+                          <div class="tab-pane fade" id="exchange_botlist">
+
+                            <table class="table exchange_bot_list_tbl" width="100%" style="margin-bottom: 0;">
+                              <thead>
+                                <!--<th>Bot ID</th>-->
+                                <th>TradeBot Info</th>
+                                <!--<th>Bot Action</th>-->
+                                <!--<th>Price</th>
+                                <th>Max Volume</th>-->
+                                <th>Progress Info</th>
+                                <th>Actions</th>
+                              </thead>
+                              <tbody></tbody>
+                            </table>
+                          </div>
                       </div>
                   </div>
-              </div>
+            </div>
+          </div>
+
+
         </div>
       </div>
 
