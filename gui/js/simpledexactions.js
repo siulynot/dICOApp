@@ -2705,6 +2705,7 @@ function bot_buy_sell(bot_data) {
 					onEscape: true,
 					title: `Looks like you don't have enough UTXOs in your balance.`,
 					message: `<p>Not a problem. I have executed the recommended command to make required UTXOs for you.</p>
+					<p>If you see the message saying "Executed Auto Split Funds", then please wait for aprox 30 seconds to 1 minute before trying again.</p>
 					<p>If you see some outgoing transactions from your barterDEX smartaddress that's sent to the same smartaddress of yours to create some inventory transactions for barterDEX to make required trades.<br>
 					Please try in a moment with same or different volume and you should be all good to go.</p>
 					<p>If you are still getting the same error again, here are few things you can try:</>
@@ -2718,6 +2719,7 @@ function bot_buy_sell(bot_data) {
 
 				if (data.withdraw.complete === true) {
 					bot_sendrawtx(data);
+					toastr.error('Executed Auto Split Funds. Please try in aprox. 30 seconds again.', 'Bot Info');
 				} else {
 					toastr.error('No withdraw info found. Please try again with lower buy amount.', 'Bot Info');
 				}
