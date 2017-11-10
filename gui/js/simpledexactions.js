@@ -40,7 +40,7 @@ $(document).ready(function() {
 		});
 
 		check_coin_balance(false);
-		CheckOrderbook_Interval = setInterval(CheckOrderBookFn,15000);
+		CheckOrderbook_Interval = setInterval(CheckOrderBookFn,5000);
 		check_swap_status_Internal = setInterval(check_swap_status,10000);
 		check_swap_status();
 		check_bot_list_Internal = setInterval(check_bot_list, 60000);
@@ -410,7 +410,7 @@ $('.btn-inventoryclose').click(function(e) {
 	});
 
 	check_coin_balance(false);
-	CheckOrderbook_Interval = setInterval(CheckOrderBookFn,3000);
+	CheckOrderbook_Interval = setInterval(CheckOrderBookFn,5000);
 	check_swap_status_Internal = setInterval(check_swap_status,10000);
 	check_swap_status();
 	check_bot_list_Internal = setInterval(check_bot_list, 60000);
@@ -589,7 +589,7 @@ $('.btn_coindashboard_exchange').click(function(e) {
 	$('.btn-botlistrefresh').attr('data-coin', coin);
 	$('.btn-refreshtrading_pair').attr('data-coin', coin);*/
 	check_coin_balance(false);
-	CheckOrderbook_Interval = setInterval(CheckOrderBookFn,3000);
+	CheckOrderbook_Interval = setInterval(CheckOrderBookFn,5000);
 	check_swap_status_Internal = setInterval(check_swap_status,10000);
 	check_swap_status();
 	check_bot_list_Internal = setInterval(check_bot_list, 60000);
@@ -2147,11 +2147,13 @@ function check_my_prices(sig){
 			//console.log(data);
 			$('.exchange_my_orders_tbl tbody').empty();
 			if (!data.error === false) {
-				var exchange_my_orders_tr = '';
-				exchange_my_orders_tr += '<tr>';
-				exchange_my_orders_tr += '<td><div style="text-align: center;">' + data.error + ' for pair ' + base_coin + '/' + rel_coin + '</div></td>';
-				exchange_my_orders_tr += '</tr>';
-				$('.exchange_my_orders_tbl tbody').append(exchange_my_orders_tr);
+				if (!data.error == 'authentication error you need to make sure userpass is set') {
+					var exchange_my_orders_tr = '';
+					exchange_my_orders_tr += '<tr>';
+					exchange_my_orders_tr += '<td><div style="text-align: center;">' + data.error + ' for pair ' + base_coin + '/' + rel_coin + '</div></td>';
+					exchange_my_orders_tr += '</tr>';
+					$('.exchange_my_orders_tbl tbody').append(exchange_my_orders_tr);
+				}
 			} else {
 				$.each(data, function(index, val) {
 					console.log(index);
@@ -2633,9 +2635,9 @@ function check_bot_list(sig) {
 												</td>`;
 						exchange_bot_list_tr += '<td style="text-align: center;"><div class="btn-group"><button class="btn btn-sm btn-info btn_bot_status" data-botid="' + val.botid + '" data-action="status"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button><button class="btn btn-sm btn-success btn_bot_resume" data-botid="' + val.botid + '" data-action="resume" ' + disable_resume_btn + '><span class="glyphicon glyphicon-play" aria-hidden="true"></span></button><button class="btn btn-sm btn-warning btn_bot_pause" data-botid="' + val.botid + '" data-action="pause" ' + disable_pause_btn + '><span class="glyphicon glyphicon-pause" aria-hidden="true"></span></button><button class="btn btn-sm btn-danger btn_bot_stop" data-botid="' + val.botid + '" data-action="stop" ' + disable_stop_btn + '><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></button></div></td>';
 					exchange_bot_list_tr += '</tr>';
-					exchange_bot_list_tr += '<tr>';
+					/*exchange_bot_list_tr += '<tr>'; // bot progress bar disabled
 						exchange_bot_list_tr += '<td colspan="5" style="padding: 0;"><div class="progress progress-nomargin"><div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="' + bot_progress_data.percent.toFixed(2) + '" aria-valuemin="0" aria-valuemax="100" style="-webkit-transition: none !important; transition: none !important; width: ' + bot_progress_data.percent.toFixed(2) + '%; text-shadow: 0px 0px 5px rgba(150, 150, 150, 1);">' + bot_progress_data.percent.toFixed(2) + '%</div></div></td>';
-					exchange_bot_list_tr += '</tr>';
+					exchange_bot_list_tr += '</tr>';*/
 					$('.exchange_bot_list_tbl tbody').append(exchange_bot_list_tr);
 				}
 			})
@@ -2922,17 +2924,40 @@ function bot_status(bot_data) {
 					_out.trade = `<table width="100%" class="table table-striped">
 												<tr>
 													<th>Trade ID</th>
+													<th>Status</th>
 													<th>Price</th>
 													<th>Volume</th>`;
 
 					for (let i = 0; i < trades.length; i++) {
 						if (trades[i].tradeid) {
 							_out.tradeNonEmpty = true;
+							
+							var trade_status = ''
+							var trade_price = ''
+							var trade_volume = ''
+							if (!trades[i].status == true) {
+								trade_status = '-'
+								trade_price = '-';
+								trade_volume = '-';
+							} else {
+								trade_status = trades[i].status;
+								if (trades[i].status !== 'pending') {
+									trade_price = trades[i].price;
+									trade_volume = trades[i].volume;
+								} else {
+									trade_price = '-';
+									trade_volume = '-';
+								}
+							}
+							console.log(trade_price);
+							console.log(trade_volume);
+
 							_out.trade += `<tr>
-																<td>${trades[i].tradeid}</td>
-																<td>${trades[i].price}</td>
-																<td>${trades[i].volume}</td>
-															</tr>`;
+												<td>${trades[i].tradeid}</td>
+												<td>${trade_status}</td>
+												<td>${trade_price}</td>
+												<td>${trade_volume}</td>
+											</tr>`;
 						}
 					}
 

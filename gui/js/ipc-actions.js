@@ -183,7 +183,7 @@ CheckMMStatus = function(sig) {
 		});
 
 		check_coin_balance(false);
-		CheckOrderbook_Interval = setInterval(CheckOrderBookFn,15000);
+		CheckOrderbook_Interval = setInterval(CheckOrderBookFn,5000);
 		check_swap_status_Internal = setInterval(check_swap_status,10000);
 		check_swap_status();
 		check_bot_list_Internal = setInterval(check_bot_list, 60000);
