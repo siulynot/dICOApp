@@ -149,6 +149,7 @@ ExecMarketMaker = function(data) {
       const _customParam = {
               'gui':'simplegui',
               'client':1,
+              'profitmargin': 0.01,
               'userhome':`${process.env.HOME}`,
               'passphrase': data.passphrase,
               'coins': data.coinslist
@@ -182,6 +183,8 @@ ExecMarketMaker = function(data) {
 
       var logStream = fs.createWriteStream(`${dICODir}/logFile.log`, {flags: 'a'});
 
+      console.log('mm start');
+      console.log(`${dICOBin} ${params}`)
       mmid = exec(`${dICOBin} ${params}`, {
             cwd: dICODir,
             maxBuffer: 1024 * 50000 // 50 mb

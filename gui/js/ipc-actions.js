@@ -3,6 +3,8 @@ var CheckMM_Interval = null;
 // In renderer process (web page).
 const {ipcRenderer} = require('electron')
 
+const _coin = 'MNZ';
+
 ShepherdIPC = function(data) {
 	/*ipcRenderer.on('shepherd-reply', (event, arg) => {
 		console.log(arg) // prints "pong"
@@ -23,7 +25,7 @@ $('.dexlogout-btn').click(function(e) {
 	$('.mainbody').fadeOut();
 	$('.loginbody').fadeIn();
 	//CheckOrderBookFn(false);
-	
+
 	//CheckPortfolioFn(false);
 	CheckOrderBookFn(false);
 	check_swap_status(false);
@@ -31,7 +33,7 @@ $('.dexlogout-btn').click(function(e) {
 	check_my_prices(false);
 	bot_screen_coin_balance(false);
 	bot_screen_sellcoin_balance(false);
-	
+
 	//check_coin_balance(false);
 	sessionStorage.clear();
 });
@@ -164,22 +166,22 @@ CheckMMStatus = function(sig) {
 		get_myprices();
 		CheckOrderbook_Interval = setInterval(CheckOrderBookFn,3000);*/
 		//check_coin_balance_Interval = setInterval(check_coin_balance,3000);
-		
+
 //---- dICO App Settings START ----//
 		//CheckPortfolio_Interval = setInterval(CheckPortfolioFn,60000);
-		
+
 		selected_coin = {}
-		selected_coin.coin = 'MNZ';
-		selected_coin.coin_name = 'Monaize';
+		selected_coin.coin = _coin;
+		selected_coin.coin_name = return_coin_name(_coin);
 		console.log(selected_coin);
 		sessionStorage.setItem('mm_selectedcoin', JSON.stringify(selected_coin));
-		
+
 		$('.screen-portfolio').hide();
 		$('.screen-coindashboard').hide()
 		$('.screen-exchange').show();
-		$('.coin_ticker').html('MNZ');
+		$('.coin_ticker').html(_coin);
 		$.each($('.coinexchange[data-coin]'), function(index, value) {
-			$('.coinexchange[data-coin]').data('coin', 'MNZ');
+			$('.coinexchange[data-coin]').data('coin', _coin);
 		});
 
 		check_coin_balance(false);
@@ -196,7 +198,7 @@ CheckMMStatus = function(sig) {
 		bot_screen_sellcoin_balance();
 
 //---- dICO App Settings END ----//
-		
+
 		clearInterval(CheckMM_Interval);
 	} else {
 		$('.mainbody').fadeOut();

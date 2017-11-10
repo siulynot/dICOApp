@@ -9,9 +9,6 @@ var check_bot_list_Internal = null;
 var bot_screen_coin_balance_Internal = null;
 var bot_screen_sellcoin_balance_Internal = null;
 
-
-
-
 $(document).ready(function() {
 	var mmstatus = ShepherdIPC({"command":"mmstatus"});
 	if (mmstatus !== 'closed') {
@@ -26,17 +23,17 @@ $(document).ready(function() {
 		//CheckPortfolioFn();
 
 		selected_coin = {}
-		selected_coin.coin = 'MNZ';
-		selected_coin.coin_name = 'Monaize';
+		selected_coin.coin = _coin;
+		selected_coin.coin_name = return_coin_name(_coin);
 		console.log(selected_coin);
 		sessionStorage.setItem('mm_selectedcoin', JSON.stringify(selected_coin));
 
 		$('.screen-portfolio').hide();
 		$('.screen-coindashboard').hide()
 		$('.screen-exchange').show();
-		$('.coin_ticker').html('MNZ');
+		$('.coin_ticker').html(_coin);
 		$.each($('.coinexchange[data-coin]'), function(index, value) {
-			$('.coinexchange[data-coin]').data('coin', 'MNZ');
+			$('.coinexchange[data-coin]').data('coin', _coin);
 		});
 
 		check_coin_balance(false);
@@ -51,7 +48,7 @@ $(document).ready(function() {
 		bot_screen_coin_balance();
 		bot_screen_sellcoin_balance_Internal = setInterval(bot_screen_sellcoin_balance, 30000);
 		bot_screen_sellcoin_balance();
-		get_coin_info('MNZ');
+		get_coin_info(_coin);
 
 //---- dICO App Settings END ----//
 
@@ -187,7 +184,7 @@ $('.btn_coindashboard_receive').click(function() {
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 		}
 
 		bootbox.dialog({
@@ -404,9 +401,9 @@ $('.btn-inventoryclose').click(function(e) {
 	$('.dex_showinv_alice_tbl tbody').empty();
 	$('.dex_showlist_unspents_tbl tbody').empty();
 	$('.RawJSONInventory-output').empty();
-	$('.coin_ticker').html('MNZ');
+	$('.coin_ticker').html(_coin);
 	$.each($('.coinexchange[data-coin]'), function(index, value) {
-		$('.coinexchange[data-coin]').data('coin', 'MNZ');
+		$('.coinexchange[data-coin]').data('coin', _coin);
 	});
 
 	check_coin_balance(false);
@@ -421,7 +418,7 @@ $('.btn-inventoryclose').click(function(e) {
 	bot_screen_coin_balance();
 	bot_screen_sellcoin_balance_Internal = setInterval(bot_screen_sellcoin_balance, 30000);
 	bot_screen_sellcoin_balance();
-	get_coin_info('MNZ');
+	get_coin_info(_coin);
 });
 
 $('.btn-inventoryrefresh').click(function(e) {
@@ -780,7 +777,7 @@ function check_coin_balance(coin_data) {
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 		}
 
 		if (!data.error === false && data.error == 'coin is disabled') {
@@ -851,7 +848,7 @@ function get_coin_info(coin) {
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 		}
 
 		if (!data.error == true) {
@@ -899,7 +896,7 @@ function get_coins() {
 				sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 				sessionStorage.setItem('mm_userpass', data.userpass);
 				sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-				get_coin_info('MNZ');
+				get_coin_info(_coin);
 			}
 	   //toastr.success('Auto goal setup executed!', 'Portfolio Info')
 	   //$('.initcoinswap-output').html(JSON.stringify(data, null, 2));
@@ -963,7 +960,7 @@ function enable_disable_coin(data) {
 					sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 					sessionStorage.setItem('mm_userpass', data.userpass);
 					sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-					get_coin_info('MNZ');
+					get_coin_info(_coin);
 
 					if (ajax_data.status === 'enable') {
 						toastr.success(ajax_data.coin+' Enabled','Coin Status');
@@ -1032,7 +1029,7 @@ function enable_disable_coin(data) {
 				sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 				sessionStorage.setItem('mm_userpass', data.userpass);
 				sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-				get_coin_info('MNZ');
+				get_coin_info(_coin);
 
 				if (ajax_data.status === 'enable') {
 					toastr.success(ajax_data.coin+' Enabled','Coin Status');
@@ -1109,7 +1106,7 @@ function check_coin_inventory(coin) {
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 			//get_coins_list(data.coins);
 			//$( ".inv_btn[data-coin='"+ coin +"']" ).trigger( "click" );
 		} else {
@@ -1515,7 +1512,7 @@ function addcoin_enable_disable_coin(data) {
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 			if (ajax_data.status === 'enable') {
 				toastr.success(ajax_data.coin+' Enabled','Coin Status');
 			}
@@ -1563,7 +1560,7 @@ function get_coins_list() {
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 			get_coins_list();
 			return
 		} else {
@@ -1714,7 +1711,7 @@ function CheckPortfolioFn(sig) {
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
 			CheckPortfolioFn();
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 			return
 		}
 
@@ -2062,7 +2059,7 @@ function CheckOrderBookFn(sig) {
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 			//CheckOrderBookFn();
 		} else {
 			//console.log(data.asks);
@@ -2161,7 +2158,7 @@ function check_my_prices(sig){
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 		} else {
 			//console.log(data);
 			$('.exchange_my_orders_tbl tbody').empty();
@@ -2311,7 +2308,7 @@ $('.your_coins_balance_info').on('click', '.coin_balance_receive', function() {
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 		}
 
 		bootbox.dialog({
@@ -2530,7 +2527,7 @@ function update_min_max_price_input(){
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 			//get_coins_list(data.coins);
 		} else {
 			//console.log(data.asks);
@@ -2580,7 +2577,7 @@ function check_bot_list(sig) {
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 		} else {
 			$('.exchange_bot_list_tbl tbody').empty();
 			$.each(data, function(index, val) {
@@ -2959,7 +2956,7 @@ function bot_status(bot_data) {
 					for (let i = 0; i < trades.length; i++) {
 						if (trades[i].tradeid) {
 							_out.tradeNonEmpty = true;
-							
+
 							var trade_status = ''
 							var trade_price = ''
 							var trade_volume = ''
@@ -3229,8 +3226,8 @@ function bot_screen_sellcoin_balance(sig) {
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
+			get_coin_info(_coin);
 			bot_screen_sellcoin_balance();
 		} else {
 			if (!data.error === false && data.error === 'coin is disabled') {
@@ -3293,7 +3290,7 @@ function bot_screen_coin_balance(sig) {
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 			bot_screen_coin_balance();
 		} else {
 			if (!data.error === false && data.error === 'coin is disabled') {
@@ -3370,7 +3367,7 @@ function check_swap_status_details(swap_data) {
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 		} else {
 			result_answer = (data.result == 'success') ? '<h4><span class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Success</span></h4>' : '<h4><span class="label label-danger"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> ' + data.result + '</span></h4>';
 			alice_answer = '<img src="img/cryptologo/'+data.alice.toLowerCase()+'.png" style="width: 30px;"> '+ return_coin_name(data.alice) + ' ('+data.alice+')';
@@ -3503,7 +3500,7 @@ function check_swap_status(sig) {
 			sessionStorage.setItem('mm_usercoins', JSON.stringify(data.coins));
 			sessionStorage.setItem('mm_userpass', data.userpass);
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
-			get_coin_info('MNZ');
+			get_coin_info(_coin);
 		} else {
 			var reversed_swap_list = data.swaps.reverse();
 
