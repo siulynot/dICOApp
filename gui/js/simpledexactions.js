@@ -3577,7 +3577,6 @@ function check_swap_status_details(swap_data) {
 			sessionStorage.setItem('mm_mypubkey', data.mypubkey);
 			get_coin_info(_coin);
 		} else {
-			$('#exchange-swap-status-spinner').hide();
 			result_answer = (data.result == 'success') ? '<h4><span class="label label-success"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Success</span></h4>' : '<h4><span class="label label-danger"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> ' + data.result + '</span></h4>';
 			alice_answer = '<img src="img/cryptologo/'+data.alice.toLowerCase()+'.png" style="width: 30px;"> '+ return_coin_name(data.alice) + ' ('+data.alice+')';
 			bob_answer = '<img src="img/cryptologo/'+data.bob.toLowerCase()+'.png" style="width: 30px;"> '+ return_coin_name(data.bob) + ' ('+data.bob+')';
@@ -3714,6 +3713,10 @@ function check_swap_status(sig) {
 			var reversed_swap_list = data.swaps.reverse();
 
 			$('.exchange_swap_status_tbl tbody').empty();
+			if (reversed_swap_list &&
+					reversed_swap_list.length) {
+				$('#exchange-swap-status-spinner').hide();
+			}
 			$.each(reversed_swap_list, function(index, val) {
 				//console.log(index);
 				//console.log(val);
