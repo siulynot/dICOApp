@@ -242,3 +242,57 @@ textarea {
 .balance-block {
   display: none;
 }
+
+.fixed_headers {
+  display: inline-block;
+  width: 750px;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.fixed_headers th,
+.fixed_headers td {
+  padding: 5px;
+  text-align: left;
+}
+.fixed_headers td:nth-child(1),
+.fixed_headers th:nth-child(1) {
+  min-width: 200px;
+}
+.fixed_headers td:nth-child(2),
+.fixed_headers th:nth-child(2) {
+  min-width: 200px;
+}
+.fixed_headers td:nth-child(3),
+.fixed_headers th:nth-child(3) {
+  width: 350px;
+}
+.fixed_headers thead {
+  width: 100%;
+}
+.fixed_headers thead tr {
+  display: block;
+  position: relative;
+}
+.fixed_headers tbody {
+  display: block;
+  overflow: auto;
+  width: 100%;
+  height: 247px;
+}
+
+#exchange_coin_asks,
+.exchange_trade_status_body {
+  overflow: hidden;
+}
+
+table tbody tr:first-child td {
+  border: none;
+}
+
+#orderbook-asks-spinner,
+#exchange-swap-status-spinner {
+  position: absolute;
+  z-index: 100;
+  top: 70px;
+  left: 0;
+}
