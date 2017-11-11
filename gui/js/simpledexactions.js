@@ -959,11 +959,26 @@ function enable_disable_coin(data) {
 		}
 	}
 
-	console.log(data);
+	console.warn('enable disable', data);
 
 	var electrum_option = data.electrum //If 'false', electrum option selected
 	var userpass = sessionStorage.getItem('mm_userpass');
 	var url = "http://127.0.0.1:7783";
+
+	if (data.method === 'disable') {
+		console.warn('disable coin called');
+		var ajax_data = {"userpass":userpass,"method":"electrum","coin":data.coin};
+
+		$.ajax({
+			async: true,
+			data: JSON.stringify(ajax_data),
+			dataType: 'json',
+			type: 'POST',
+			url: url
+		}).done(function(data) {
+			console.log('enable_disable_coin', 'electrum removed');
+		});
+	}
 
 	if (electrum_option == false) {
 		console.log(electrum_option);
@@ -3242,7 +3257,7 @@ function bot_status(bot_data) {
 						</tr>
 						<tr>
 							<td>Trades Attempts</td>
-							<td><div style="max-height: 450px; overflow: scroll;">` + renderTradeAttempts(data.trades) + `</div></td>
+							<td><div style="max-height: 450px; overflow-y: scroll;">` + renderTradeAttempts(data.trades) + `</div></td>
 						</tr>
 					</table>
 
@@ -3445,12 +3460,12 @@ function bot_screen_sellcoin_balance(sig) {
 				$('#balance-spinner').hide();
 				$('.balance-block').show();
 			} else {
-				console.log(!data.coin.electrum)
+				console.warn(data.coin)
 				var coin_mode = '';
-				if (!data.coin.electrum !== true) {
-					coin_mode = '<i class="fa fa-shield fa-leaf"></i>'
+				if (data.coin.electrum) {
+					coin_mode = '<i class="fa fa-bolt"></i>'
 				} else {
-					coin_mode = '<i class="fa fa-shield fa-book"></i>'
+					coin_mode = '<i class="fa fa-shield"></i>'
 				}
 				var button_controls = `<br>
 				<span>
@@ -3459,7 +3474,7 @@ function bot_screen_sellcoin_balance(sig) {
 					<button class="btn btn-success btn-xs coin_balance_send" style="margin-top: 6px;" data-coin="` + coin + `">Send</button>
 					<button class="btn btn-info btn-xs coin_balance_inventory" style="margin-top: 6px;" data-coin="` + coin + `" data-addr="` + data.coin.smartaddress + `" data-balance="` + data.coin.balance + `">Inventory</button>
 				</span>`;
-				$('.trading_sellcoin_ticker_name').html('<img src="img/cryptologo/'+coin.toLowerCase()+'.png" style="width: 30px;"> '+ return_coin_name(coin) + ' ('+coin+') <!--<small style="vertical-align: top">' + coin_mode + '</small>-->'+button_controls);
+				$('.trading_sellcoin_ticker_name').html('<img src="img/cryptologo/'+coin.toLowerCase()+'.png" style="width: 30px;"> '+ return_coin_name(coin) + ' ('+coin+') <small style="vertical-align: top; margin-left: 10px">' + coin_mode + '</small>'+button_controls);
 				$('.trading_sellcoin_balance').html(data.coin.balance + ' <span style="font-size: 60%; font-weight: 100;">' + coin + '</span><br><span style="font-size: 50%; font-weight: 200;">' + data.coin.smartaddress + '</span>');
 				$('#balance-spinner').hide();
 				$('.balance-block').show();
@@ -3518,11 +3533,11 @@ function bot_screen_coin_balance(sig) {
 				$('.trading_coin_balance').html('Coin is disabled');
 			} else {
 				var coin_mode = '';
-					console.log(!data.coin.electrum)
-				if (!data.coin.electrum !== true) {
-					coin_mode = '<i class="fa fa-shield fa-leaf"></i>'
+				console.warn(data.coin)
+				if (data.coin.electrum) {
+					coin_mode = '<i class="fa fa-bolt"></i>'
 				} else {
-					coin_mode = '<i class="fa fa-shield fa-book"></i>'
+					coin_mode = '<i class="fa fa-shield"></i>'
 				}
 				var button_controls = `<br>
 				<span>
@@ -3531,7 +3546,7 @@ function bot_screen_coin_balance(sig) {
 					<button class="btn btn-success btn-xs coin_balance_send" style="margin-top: 6px;" data-coin="` + coin + `">Send</button>
 					<button class="btn btn-info btn-xs coin_balance_inventory" style="margin-top: 6px;" data-coin="` + coin + `" data-addr="` + data.coin.smartaddress + `" data-balance="` + data.coin.balance + `">Inventory</button>
 				</span>`;
-				$('.trading_coin_ticker_name').html('<img src="img/cryptologo/'+coin.toLowerCase()+'.png" style="width: 30px;"> '+ return_coin_name(coin) + ' ('+coin+') <!--<small style="vertical-align: top">' + coin_mode + '</small>-->'+button_controls);
+				$('.trading_coin_ticker_name').html('<img src="img/cryptologo/'+coin.toLowerCase()+'.png" style="width: 30px;"> '+ return_coin_name(coin) + ' ('+coin+') <small style="vertical-align: top; margin-left: 10px">' + coin_mode + '</small>'+button_controls);
 				$('.trading_coin_balance').html(data.coin.balance + ' <span style="font-size: 60%; font-weight: 100;">' + coin + '</span><br><span style="font-size: 50%; font-weight: 200;">' + data.coin.smartaddress + '</span>');
 			}
 
