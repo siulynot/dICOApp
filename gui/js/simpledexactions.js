@@ -2694,6 +2694,7 @@ function create_sendtx(coin,tx_data){
 		} else {
 			if (data.complete == true) {
 				console.log(data.hex);
+				if (!data.hasOwnProperty('coin')) { data.coin = coin; }
 				bot_sendrawtx(data);
 			} else {
 				toastr.error('Transaction did not complete. Please try again.', 'Transaction Info');
@@ -2979,7 +2980,7 @@ function bot_buy_sell(bot_data) {
 
 function bot_sendrawtx(bot_data) {
 	console.log(bot_data);
-	console.log(bot_data.withdraw.hex)
+	if (bot_data.hasOwnProperty('withdraw')) { console.log(bot_data.withdraw.hex); }
 	var coin = bot_data.coin;
 	console.log(coin);
 
@@ -2987,7 +2988,7 @@ function bot_sendrawtx(bot_data) {
 
 	var userpass = sessionStorage.getItem('mm_userpass');
 	var mypubkey = sessionStorage.getItem('mm_mypubkey');
-	var ajax_data = {"userpass":userpass,"method":"sendrawtransaction","coin": coin, "signedtx": bot_data.withdraw.hex};
+	var ajax_data = {"userpass":userpass,"method":"sendrawtransaction","coin": coin, "signedtx": (bot_data.hasOwnProperty('withdraw') ? bot_data.withdraw.hex : bot_data.hex) };
 	var url = "http://127.0.0.1:7783";
 
 	console.log(ajax_data);
