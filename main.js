@@ -31,6 +31,16 @@ if (osPlatform === 'linux') {
   // console.log(process.env);
 }
 
+var MNZdICOIcon;
+
+if (os.platform() === 'linux') {
+  MNZdICOIcon = path.join(__dirname, '/assets/icons/monaize/128x128.png');
+}
+if (os.platform() === 'win32') {
+  MNZdICOIcon = path.join(__dirname, '/assets/icons/monaize/agama_app_icon.ico');
+}
+
+
 let closeAppAfterLoading = false;
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -43,10 +53,10 @@ function createWindow (status) {
   // initialise window
   mainWindow = new BrowserWindow({ // dirty hack to prevent main window flash on quit
     width: closeAppAfterLoading ? 1 : 1280,
-    height: closeAppAfterLoading ? 1 : 800
+    height: closeAppAfterLoading ? 1 : 800,
     //titleBarStyle: 'customButtonsOnHover',
     //frame: false
-    //icon: iguanaIcon
+    icon: MNZdICOIcon
   });
 
   const staticMenu = Menu.buildFromTemplate([ // if static
