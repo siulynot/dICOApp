@@ -39,7 +39,7 @@ Refer to the original [electron-packager](https://github.com/electron-userland/e
 Change directory to dICOApp and execute the following command to build the Linux app
 ```shell
 cd dICOApp
-electron-packager . --platform=linux --arch=x64 --out=build/ --buildVersion=VERSION_NUMBER_HERE --ignore=assets/bin/win64 --ignore=assets/bin/osx --overwrite
+electron-packager . --platform=linux --arch=x64 --icon=assets/icons/monaize/128x128.png --out=build/ --buildVersion=VERSION_NUMBER_HERE --ignore=assets/bin/win64 --ignore=assets/bin/osx --overwrite
 ```
 change architecture build parameter to ```--arch=x32``` for 32 bit build
 
@@ -47,7 +47,7 @@ change architecture build parameter to ```--arch=x32``` for 32 bit build
 Change directory to dICOApp and execute the following command to build the OSX app
 ```shell
 cd dICOApp
-electron-packager . --platform=darwin --arch=x64 --out=build/ --buildVersion=VERSION_NUMBER_HERE --ignore=assets/bin/win64 --ignore=assets/bin/linux64 --overwrite
+electron-packager . --platform=darwin --arch=x64 --icon=assets/icons/monaize/mnz.icns --out=build/ --buildVersion=VERSION_NUMBER_HERE --ignore=assets/bin/win64 --ignore=assets/bin/linux64 --overwrite
 ```
 
 ##### Windows
