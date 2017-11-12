@@ -3914,7 +3914,7 @@ function check_swap_status(sig) {
 				if(!val.error === false) {
 					var exchange_swap_status_tr = '';
 					exchange_swap_status_tr += '<tr>';
-					exchange_swap_status_tr += '<td><div style="color: #e53935; font-size: 150px;"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> error</div></td>';
+					exchange_swap_status_tr += '<td><div style="color: #e53935; font-size: 15px;"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> error</div></td>';
 					exchange_swap_status_tr += '<td>-</td>';
 					exchange_swap_status_tr += '<td>-</td>';
 					exchange_swap_status_tr += '<td>-</td>';
