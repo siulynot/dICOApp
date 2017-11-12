@@ -38,9 +38,9 @@ $(document).ready(function() {
 
 		check_coin_balance(false);
 		CheckOrderbook_Interval = setInterval(CheckOrderBookFn,5000);
-		check_swap_status_Internal = setInterval(check_swap_status,10000);
+		check_swap_status_Internal = setInterval(check_swap_status,3000);
 		check_swap_status();
-		check_bot_list_Internal = setInterval(check_bot_list, 60000);
+		check_bot_list_Internal = setInterval(check_bot_list, 10000);
 		check_bot_list();
 		check_my_prices_Internal = setInterval(check_my_prices, 60000);
 		check_my_prices();
@@ -410,9 +410,9 @@ $('.btn-inventoryclose').click(function(e) {
 
 	check_coin_balance(false);
 	CheckOrderbook_Interval = setInterval(CheckOrderBookFn,5000);
-	check_swap_status_Internal = setInterval(check_swap_status,10000);
+	check_swap_status_Internal = setInterval(check_swap_status,3000);
 	check_swap_status();
-	check_bot_list_Internal = setInterval(check_bot_list, 60000);
+	check_bot_list_Internal = setInterval(check_bot_list, 10000);
 	check_bot_list();
 	check_my_prices_Internal = setInterval(check_my_prices, 60000);
 	check_my_prices();
@@ -589,9 +589,9 @@ $('.btn_coindashboard_exchange').click(function(e) {
 	$('.btn-refreshtrading_pair').attr('data-coin', coin);*/
 	check_coin_balance(false);
 	CheckOrderbook_Interval = setInterval(CheckOrderBookFn,5000);
-	check_swap_status_Internal = setInterval(check_swap_status,10000);
+	check_swap_status_Internal = setInterval(check_swap_status,3000);
 	check_swap_status();
-	check_bot_list_Internal = setInterval(check_bot_list, 60000);
+	check_bot_list_Internal = setInterval(check_bot_list, 10000);
 	check_bot_list();
 	check_my_prices_Internal = setInterval(check_my_prices, 60000);
 	check_my_prices();
@@ -2146,6 +2146,9 @@ function manual_buy_sell(mt_data) {
 			if (data.error == 'invalid parameter') {
 				toastr.warning('Invalid Parameters.', 'Trade Info');
 			}
+			if (data.error == 'cant find alice utxo that is small enough') {
+				toastr.error(data.error, 'Bot Info');
+			}
 			if (data.error == 'not enough funds') {
 				//toastr.info(data.error + '<br>Balance: ' + data.balance + ' ' + data.coin, 'Bot Info');
 				bootbox.alert({
@@ -2941,6 +2944,9 @@ function bot_buy_sell(bot_data) {
 			if (data.error == 'invalid parameter') {
 				toastr.warning('Invalid Parameters.', 'Bot Info');
 			}
+			if (data.error == 'cant find alice utxo that is small enough') {
+				toastr.error(data.error, 'Bot Info');
+			}
 			if (data.error == 'not enough funds') {
 				//toastr.info(data.error + '<br>Balance: ' + data.balance + ' ' + data.coin, 'Bot Info');
 				bootbox.alert({
@@ -3461,9 +3467,9 @@ function bot_screen_sellcoin_balance(sig) {
 				$('#balance-spinner').hide();
 				$('.balance-block').show();
 			} else {
-				console.warn(data.coin)
+				//console.warn(data.coin)
 				var coin_mode = '';
-				if (data.coin.electrum) {
+				if (data.coin.hasOwnProperty('electrum')) {
 					coin_mode = '<i class="fa fa-bolt"></i>'
 				} else {
 					coin_mode = '<i class="fa fa-shield"></i>'
@@ -3534,8 +3540,8 @@ function bot_screen_coin_balance(sig) {
 				$('.trading_coin_balance').html('Coin is disabled');
 			} else {
 				var coin_mode = '';
-				console.warn(data.coin)
-				if (data.coin.electrum) {
+				//console.warn(data.coin)
+				if (data.coin.hasOwnProperty('electrum')) {
 					coin_mode = '<i class="fa fa-bolt"></i>'
 				} else {
 					coin_mode = '<i class="fa fa-shield"></i>'
@@ -3612,10 +3618,42 @@ function check_swap_status_details(swap_data) {
 			bob_answer = '<img src="img/cryptologo/'+data.bob.toLowerCase()+'.png" style="width: 30px;"> '+ return_coin_name(data.bob) + ' ('+data.bob+')';
 			iambob_answer = (data.iambob == 0) ? 'Buyer' : 'Seller';
 
-			bootbox.dialog({
-				onEscape: true,
-				backdrop: true,
-				message: `
+			var time = new Date( 1510516313 *1000);;
+			//var expiration = moment.unix(data.expiration);
+			//var now = moment();
+
+/*if(val.bobpayment !== '0000000000000000000000000000000000000000000000000000000000000000'){
+						status_color = '#43a047';
+						swap_status = '<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>';
+					} else if (current_sentflag == 'alicespend') {
+						status_color = '#43a047';
+						swap_status = '<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>';
+					} else if (current_sentflag == 'bobpayment') {
+						status_color = '#0277bd';
+						swap_status = '<span class="glyphicon glyphicon-save" aria-hidden="true"></span>';
+					} else if (current_sentflag == 'alicepayment') {
+						status_color = '#42a5f5';
+						swap_status = '<span class="glyphicon glyphicon-random" aria-hidden="true"></span>';
+					} else if (current_sentflag == 'bobdeposit') {
+						status_color = '#4527a0';
+						swap_status = '<span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>';
+					} else if(current_sentflag == 'myfee'){
+						status_color = '#ef6c00';
+						swap_status = '<span class="glyphicon glyphicon-random" aria-hidden="true"></span>';
+					}*/
+
+			var swap_status_details_bootbox = bootbox.dialog({
+			backdrop: true,
+			message: `
+					<div class="input-group col-sm-12">
+                      <span class="input-group-addon" style="font-size: 20px;"><div class="swapdetail_bobdeposit"><span class="glyphicon glyphicon-save" aria-hidden="true"></span><br>Seller Deposit</div></span>
+                      <span class="input-group-addon" style="font-size: 20px;"><div class="swapdetail_alicepayment"><span class="glyphicon glyphicon-transfer" aria-hidden="true"></span><br>Buyer Payment</div></span>
+                      <span class="input-group-addon" style="font-size: 20px;"><div class="swapdetail_bobpayment"><span class="glyphicon glyphicon-random" aria-hidden="true"></span><br>Seller Payment</div></span>
+                      <span class="input-group-addon" style="font-size: 20px; text-align: center;"><div class="swapdetail_alicespend"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span><br>All Done!</div></span>
+                    </div>
+                    <div class="input-group col-sm-12">
+                      <span class="input-group-addon swapdetail_info" style="font-size: 20px; background-color: #fff;"></span>
+                    </div>
 					<table width="100%" class="table table-striped">
 						<tr>
 							<td rowspan=5>Trade info</td>
@@ -3631,12 +3669,12 @@ function check_swap_status_details(swap_data) {
 							<td>` + data.tradeid + `</td>
 						</tr>
 						<tr>
-							<td>Source Amount</td>
-							<td>` + data.srcamount + `</td>
+							<td>Expires In</td>
+							<td>` + time + `</td>
 						</tr>
 						<tr>
-							<td>Result</td>
-							<td>` + result_answer + `</td>
+							<td>Source Amount</td>
+							<td>` + data.srcamount + `</td>
 						</tr>
 						<tr>
 							<td rowspan=4>Buyer Info</td>
@@ -3649,11 +3687,11 @@ function check_swap_status_details(swap_data) {
 						</tr>
 						<tr>
 							<td>Buyer Payment</td>
-							<td>` + data.alicepayment + `</td>
+							<td class="tbl_alicepayment">` + data.alicepayment + `</td>
 						</tr>
 						<tr>
 							<td>Buyer Tx Fee</td>
-							<td>` + data.alicetxfee + `</td>
+							<td class="tbl_alicetxfee">` + data.alicetxfee + `</td>
 						</tr>
 						<tr>
 							<td rowspan=4>Seller Info</td>
@@ -3662,15 +3700,15 @@ function check_swap_status_details(swap_data) {
 						</tr>
 						<tr>
 							<td>Seller Deposit</td>
-							<td>` + data.bobdeposit + `</td>
+							<td class="tbl_bobdeposit">` + data.bobdeposit + `</td>
 						</tr>
 						<tr>
 							<td>Seller Payment</td>
-							<td>` + data.bobpayment + `</td>
+							<td class="tbl_bobpayment">` + data.bobpayment + `</td>
 						</tr>
 						<tr>
 							<td>Seller Tx Fee</td>
-							<td>` + data.bobtxfee + `</td>
+							<td class="tbl_bobtxfee">` + data.bobtxfee + `</td>
 						</tr>
 						<tr>
 							<td rowspan=5>Other Info</td>
@@ -3679,30 +3717,153 @@ function check_swap_status_details(swap_data) {
 						</tr>
 						<tr>
 							<td>Sent Flags</td>
-							<td>` + JSON.stringify(data.sentflags, null, 2) + `</td>
+							<td class="tbl_sentflags">` + JSON.stringify(data.sentflags, null, 2) + `</td>
 						</tr>
 						<tr>
 							<td>Values</td>
-							<td>` + JSON.stringify(data.values, null, 2) + `</td>
+							<td class="tbl_values">` + JSON.stringify(data.values, null, 2) + `</td>
 						</tr>
 						<tr>
 							<td>depositspent</td>
-							<td>` + data.depositspent + `</td>
+							<td class="tbl_depositspent">` + data.depositspent + `</td>
 						</tr>
 						<tr>
 							<td>Apayment Spent</td>
-							<td>` + data.Apaymentspent + `</td>
+							<td class="tbl_Apaymentspent">` + data.Apaymentspent + `</td>
 						</tr>
 					</table>`,
-				closeButton: true,
-				size: 'large'
+				closeButton: false,
+				size: 'large',
+				buttons: {
+					cancel: {
+						label: "Close",
+						className: 'btn-default btn_swap_status_details_close',
+						callback: function(){
+						}
+					}
+				}
 			});
+			swap_status_details_bootbox.init(function(){
+				CheckOrderBookFn(false);
+				check_swap_status(false);
+				check_bot_list(false);
+				check_my_prices(false);
+				//bot_screen_coin_balance(false);
+				//bot_screen_sellcoin_balance(false);
+
+				var swapdetail_blinker = null;
+
+				function blinker(sig) {
+					$.ajax({
+						async: true,
+						data: JSON.stringify(ajax_data),
+						dataType: 'json',
+						type: 'POST',
+						url: url
+					}).done(function(dataforblinker) {
+						$('.tbl_alicepayment').html(dataforblinker.alicepayment);
+						$('.tbl_alicetxfee').html(dataforblinker.alicetxfee);
+						$('.tbl_bobdeposit').html(dataforblinker.bobdeposit);
+						$('.tbl_bobpayment').html(dataforblinker.bobpayment);
+						$('.tbl_bobtxfee').html(dataforblinker.bobtxfee);;
+						$('.tbl_sentflags').html(JSON.stringify(dataforblinker.sentflags), null, 2);
+						$('.tbl_values').html(JSON.stringify(dataforblinker.values), null, 2);
+						$('.tbl_depositspent').html(dataforblinker.depositspent);
+						$('.tbl_Apaymentspent').html(dataforblinker.Apaymentspent);
+
+						var current_sentflag = get_swapstatus_step(dataforblinker)
+						console.log('CURRENT SENT FLAG IS: ' + current_sentflag);
+						if (sig == false) {
+							clearInterval(swapdetail_blinker);
+							return
+						} else {
+							console.log('swap detail BLINKING');
+						}
+
+						if(dataforblinker.bobpayment !== '0000000000000000000000000000000000000000000000000000000000000000'){
+							$('.swapdetail_info').html('<h3>Barter Completed!! Buyer Received Funds!</h3>');
+							blinker(false);
+						} else if (current_sentflag == 'alicespend') {
+							$('.swapdetail_info').html('<h3>Buyer Received Funds.</h3>');
+							$('.swapdetail_alicespend').fadeOut(500);
+							$('.swapdetail_alicespend').fadeIn(500);
+						} else if (current_sentflag == 'bobpayment') {
+							$('.swapdetail_info').html('<h3>Seller Sent Payment.</h3><h3> Waiting for Buyer to confirm Payment..</h3>');
+							$('.swapdetail_alicespend').fadeOut(500);
+							$('.swapdetail_alicespend').fadeIn(500);
+						} else if (current_sentflag == 'alicepayment') {
+							$('.swapdetail_info').html('<h3>Buyer Payment Made. Waiting for Seller\'s Payment.</h3>');
+							$('.swapdetail_bobpayment').fadeOut(500);
+							$('.swapdetail_bobpayment').fadeIn(500);
+						} else if (current_sentflag == 'bobdeposit') {
+							$('.swapdetail_info').html('<h3>Seller Deposited his security. Waiting for Buyer\'s Payment.</h3>');
+							$('.swapdetail_alicepayment').fadeOut(500);
+							$('.swapdetail_alicepayment').fadeIn(500);
+						} else if(current_sentflag == 'myfee'){
+							$('.swapdetail_info').html('<h3>My BarterDEX fee has been paid.</h3>');
+							$('.swapdetail_bobdeposit').fadeOut(500);
+							$('.swapdetail_bobdeposit').fadeIn(500);
+						}
+					});
+				}
+
+				swapdetail_blinker = setInterval(blinker, 1000);
+
+				$('.btn_swap_status_details_close').click(function(e){
+					e.preventDefault();
+					console.log('btn_swap_status_details_close clicked');
+					blinker(false);
+
+					CheckOrderbook_Interval = setInterval(CheckOrderBookFn,5000);
+					check_swap_status_Internal = setInterval(check_swap_status,3000);
+					check_swap_status();
+					check_bot_list_Internal = setInterval(check_bot_list, 10000);
+					check_bot_list();
+					check_my_prices_Internal = setInterval(check_my_prices, 60000);
+					check_my_prices();
+					//bot_screen_coin_balance_Internal = setInterval(bot_screen_coin_balance, 30000);
+					//bot_screen_coin_balance();
+					//bot_screen_sellcoin_balance_Internal = setInterval(bot_screen_sellcoin_balance, 30000);
+					//bot_screen_sellcoin_balance();
+					get_coin_info(_coin);
+				})
+
+			});
+
 		}
 
 	}).fail(function(jqXHR, textStatus, errorThrown) {
 	    // If fail
 	    console.log(textStatus + ': ' + errorThrown);
 	});
+}
+
+function get_swapstatus_step(swap_data) {
+	//console.log(swap_data.sentflags);
+	var status = "realtime";
+	for(var i = 0; i < swap_data.sentflags.length; i++) {
+		if (swap_data.sentflags[i] == 'alicespend') {
+			status = "alicespend";
+			return status;
+			//break;
+		} else if (swap_data.sentflags[i] == 'bobpayment') {
+			status = "bobpayment";
+			return status;
+			//break;
+		} else if (swap_data.sentflags[i] == 'alicepayment') {
+			status = "alicepayment";
+			return status;
+			//break;
+		} else if (swap_data.sentflags[i] == 'bobdeposit') {
+			status = "bobdeposit";
+			return status;
+			//break;
+		} else if(swap_data.sentflags[i] == 'myfee'){
+			status = "myfee";
+			return status;
+			//break;
+		}
+	}	
 }
 
 
@@ -3753,16 +3914,44 @@ function check_swap_status(sig) {
 				if(!val.error === false) {
 					var exchange_swap_status_tr = '';
 					exchange_swap_status_tr += '<tr>';
-					exchange_swap_status_tr += '<td><div>error</div></td>';
+					exchange_swap_status_tr += '<td><div style="color: #e53935; font-size: 150px;"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> error</div></td>';
 					exchange_swap_status_tr += '<td>-</td>';
 					exchange_swap_status_tr += '<td>-</td>';
 					exchange_swap_status_tr += '<td>-</td>';
 					exchange_swap_status_tr += '</tr>';
 					$('.exchange_swap_status_tbl tbody').append(exchange_swap_status_tr);
 				} else {
+
+					
+					if(val.status !== 'realtime') {
+						var current_sentflag = get_swapstatus_step(val);
+						if(val.bobpayment !== '0000000000000000000000000000000000000000000000000000000000000000'){
+							status_color = 'color: #43a047;';
+							swap_status = '<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>';
+						} else if (current_sentflag == 'alicespend') {
+							status_color = 'color: #43a047;';
+							swap_status = '<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>';
+						} else if (current_sentflag == 'bobpayment') {
+							status_color = 'color: #0277bd;';
+							swap_status = '<span class="glyphicon glyphicon-save" aria-hidden="true"></span>';
+						} else if (current_sentflag == 'alicepayment') {
+							status_color = 'color: #42a5f5;';
+							swap_status = '<span class="glyphicon glyphicon-random" aria-hidden="true"></span>';
+						} else if (current_sentflag == 'bobdeposit') {
+							status_color = 'color: #4527a0;';
+							swap_status = '<span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>';
+						} else if(current_sentflag == 'myfee'){
+							status_color = 'color: #ef6c00;';
+							swap_status = '<span class="glyphicon glyphicon-random" aria-hidden="true"></span>';
+						}
+					} else {
+						var status_color = '';
+						var swap_status = '<span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>';
+					}
+
 					var exchange_swap_status_tr = '';
 					exchange_swap_status_tr += '<tr>';
-					exchange_swap_status_tr += '<td>' + val.status + '</td>';
+					exchange_swap_status_tr += '<td><div style="'+status_color+' font-size: 15px;">' + swap_status + ' ' + val.status +'</div></td>';
 					exchange_swap_status_tr += '<td>' + val.quoteid + '</td>';
 					exchange_swap_status_tr += '<td>' + val.requestid + '</td>';
 					exchange_swap_status_tr += '<td><button class="btn btn-default swapstatus_details" data-quoteid="' + val.quoteid + '" data-requestid="' + val.requestid + '">Details</button></td>';
