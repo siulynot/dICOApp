@@ -38,7 +38,7 @@ $(document).ready(function() {
 
 		check_coin_balance(false);
 		CheckOrderbook_Interval = setInterval(CheckOrderBookFn,5000);
-		check_swap_status_Internal = setInterval(check_swap_status,3000);
+		check_swap_status_Internal = setInterval(check_swap_status,20000);
 		check_swap_status();
 		check_bot_list_Internal = setInterval(check_bot_list, 10000);
 		check_bot_list();
@@ -410,7 +410,7 @@ $('.btn-inventoryclose').click(function(e) {
 
 	check_coin_balance(false);
 	CheckOrderbook_Interval = setInterval(CheckOrderBookFn,5000);
-	check_swap_status_Internal = setInterval(check_swap_status,3000);
+	check_swap_status_Internal = setInterval(check_swap_status,20000);
 	check_swap_status();
 	check_bot_list_Internal = setInterval(check_bot_list, 10000);
 	check_bot_list();
@@ -589,7 +589,7 @@ $('.btn_coindashboard_exchange').click(function(e) {
 	$('.btn-refreshtrading_pair').attr('data-coin', coin);*/
 	check_coin_balance(false);
 	CheckOrderbook_Interval = setInterval(CheckOrderBookFn,5000);
-	check_swap_status_Internal = setInterval(check_swap_status,3000);
+	check_swap_status_Internal = setInterval(check_swap_status,20000);
 	check_swap_status();
 	check_bot_list_Internal = setInterval(check_bot_list, 10000);
 	check_bot_list();
@@ -3807,7 +3807,7 @@ function check_swap_status_details(swap_data) {
 					});
 				}
 
-				swapdetail_blinker = setInterval(blinker, 1000);
+				swapdetail_blinker = setInterval(blinker, 10000);
 
 				$('.btn_swap_status_details_close').click(function(e){
 					e.preventDefault();
@@ -3815,7 +3815,7 @@ function check_swap_status_details(swap_data) {
 					blinker(false);
 
 					CheckOrderbook_Interval = setInterval(CheckOrderBookFn,5000);
-					check_swap_status_Internal = setInterval(check_swap_status,3000);
+					check_swap_status_Internal = setInterval(check_swap_status,20000);
 					check_swap_status();
 					check_bot_list_Internal = setInterval(check_bot_list, 10000);
 					check_bot_list();
