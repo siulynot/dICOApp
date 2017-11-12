@@ -2316,11 +2316,12 @@ function CheckOrderBookFn(sig) {
 				row_trade_data.numutxos = val.numutxos;
 				row_trade_data.maxbuy = val.maxvolume / val.price;
 				row_trade_data.pubkey = val.pubkey;
+				row_trade_data.totalbuy = (val.maxvolume / val.price) * val.numutxos;
 				var orderbook_asks_tr = '';
 				orderbook_asks_tr += '<tr ' + mytrade_true + ' onclick=setOrderPrice(' + JSON.stringify(row_trade_data) + ')>';
 				orderbook_asks_tr += '<td>' + val.price + '</td>';
-				orderbook_asks_tr += '<td>' + val.minvolume + '</td>';
-				orderbook_asks_tr += '<td>' + val.maxvolume + '</td>';
+				orderbook_asks_tr += '<td>' + val.minvolume + ' - ' + val.maxvolume + '</td>';
+				orderbook_asks_tr += '<td>' + row_trade_data.totalbuy.toFixed(8) + '</td>';
 				orderbook_asks_tr += '<td>' + val.age + '</td>';
 				orderbook_asks_tr += '<td>' + val.numutxos + '</td>';
 				orderbook_asks_tr += '</tr>';
