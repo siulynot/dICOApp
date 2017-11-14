@@ -670,6 +670,13 @@ $('.btn-bot_action').click(function(e){
 
 		console.log(bot_data);
 
+		if (pair_volume <= 0.01 || pair_price <= 0.01) {
+			console.log('Order is too small. Please try again.');
+			toastr.warning('Order is too small. Please try again with bigger order.', 'Order Notification')
+		} else {
+			toastr.success('Placing Order', 'Order Notification');
+		}
+
 		bot_buy_sell(bot_data);
 
 	} else if (bot_or_manual == 'trademanual') {
@@ -693,6 +700,13 @@ $('.btn-bot_action').click(function(e){
 		trade_data.action = $(this).data('action');
 
 		//console.log(trade_data);
+
+		if (pair_volume <= 0.01 || pair_price <= 0.01) {
+			console.log('Order is too small. Please try again.');
+			toastr.warning('Order is too small. Please try again with bigger order.', 'Order Notification')
+		} else {
+			toastr.success('Placing Order', 'Order Notification');
+		}
 
 		manual_buy_sell(trade_data)
 
@@ -3619,29 +3633,27 @@ function check_swap_status_details(swap_data) {
 			bob_answer = '<img src="img/cryptologo/'+data.bob.toLowerCase()+'.png" style="width: 30px;"> '+ return_coin_name(data.bob) + ' ('+data.bob+')';
 			iambob_answer = (data.iambob == 0) ? 'Buyer' : 'Seller';
 
+			var bob_explorer = '';
+			if(data.bob == 'MNZ') {
+				bob_explorer = 'https://www.mnzexplorer.com/tx/'
+			} else if(data.bob == 'KMD') {
+				bob_explorer = 'https://www.kmd.host/tx/'
+			} else if(data.bob == 'BTC') {
+				bob_explorer = 'https://www.blocktrail.com/BTC/tx/'
+			}
+
+			var alice_explorer = '';
+			if(data.alice == 'MNZ') {
+				alice_explorer = 'https://www.mnzexplorer.com'
+			} else if(data.alice == 'KMD') {
+				alice_explorer = 'https://www.kmd.host'
+			} else if(data.alice == 'BTC') {
+				alice_explorer = 'https://www.blocktrail.com/BTC/tx/'
+			}
+
 			var time = new Date( 1510516313 *1000);;
 			//var expiration = moment.unix(data.expiration);
 			//var now = moment();
-
-/*if(val.bobpayment !== '0000000000000000000000000000000000000000000000000000000000000000'){
-						status_color = '#43a047';
-						swap_status = '<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>';
-					} else if (current_sentflag == 'alicespend') {
-						status_color = '#43a047';
-						swap_status = '<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span>';
-					} else if (current_sentflag == 'bobpayment') {
-						status_color = '#0277bd';
-						swap_status = '<span class="glyphicon glyphicon-save" aria-hidden="true"></span>';
-					} else if (current_sentflag == 'alicepayment') {
-						status_color = '#42a5f5';
-						swap_status = '<span class="glyphicon glyphicon-random" aria-hidden="true"></span>';
-					} else if (current_sentflag == 'bobdeposit') {
-						status_color = '#4527a0';
-						swap_status = '<span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>';
-					} else if(current_sentflag == 'myfee'){
-						status_color = '#ef6c00';
-						swap_status = '<span class="glyphicon glyphicon-random" aria-hidden="true"></span>';
-					}*/
 
 			var swap_status_details_bootbox = bootbox.dialog({
 			backdrop: true,
@@ -3701,7 +3713,7 @@ function check_swap_status_details(swap_data) {
 						</tr>
 						<tr>
 							<td>Seller Deposit</td>
-							<td class="tbl_bobdeposit">` + data.bobdeposit + `</td>
+							<td class="tbl_bobdeposit">` + `<a href="`+bob_explorer+data.bobdeposit+`" onclick="window.open(this.href,'targetWindow',width=1280px,height=800px'); return false;">` + data.bobdeposit + `</a></td>
 						</tr>
 						<tr>
 							<td>Seller Payment</td>
@@ -3762,9 +3774,27 @@ function check_swap_status_details(swap_data) {
 						type: 'POST',
 						url: url
 					}).done(function(dataforblinker) {
+						var bob_explorer = '';
+			if(data.bob == 'MNZ') {
+				bob_explorer = 'https://www.mnzexplorer.com/tx/'
+			} else if(data.bob == 'KMD') {
+				bob_explorer = 'https://www.kmd.host/tx/'
+			} else if(data.bob == 'BTC') {
+				bob_explorer = 'https://www.blocktrail.com/BTC/tx/'
+			}
+
+			var alice_explorer = '';
+			if(data.alice == 'MNZ') {
+				alice_explorer = 'https://www.mnzexplorer.com'
+			} else if(data.alice == 'KMD') {
+				alice_explorer = 'https://www.kmd.host'
+			} else if(data.alice == 'BTC') {
+				alice_explorer = 'https://www.blocktrail.com/BTC/tx/'
+			}
+			
 						$('.tbl_alicepayment').html(dataforblinker.alicepayment);
 						$('.tbl_alicetxfee').html(dataforblinker.alicetxfee);
-						$('.tbl_bobdeposit').html(dataforblinker.bobdeposit);
+						$('.tbl_bobdeposit').html(`<a href="`+bob_explorer+dataforblinker.bobdeposit+`" onclick="window.open(this.href,'targetWindow',width=1280px,height=800px'); return false;">` + dataforblinker.bobdeposit);
 						$('.tbl_bobpayment').html(dataforblinker.bobpayment);
 						$('.tbl_bobtxfee').html(dataforblinker.bobtxfee);;
 						$('.tbl_sentflags').html(JSON.stringify(dataforblinker.sentflags), null, 2);
@@ -3782,7 +3812,7 @@ function check_swap_status_details(swap_data) {
 						}
 
 						if(dataforblinker.bobpayment !== '0000000000000000000000000000000000000000000000000000000000000000'){
-							$('.swapdetail_info').html('<h3>Barter Completed!! Buyer Received Funds!</h3>');
+							$('.swapdetail_info').html('<h3><font style="font-size: 200%;">🎉</font> Barter Completed!! Buyer Received Funds!</h3>');
 							blinker(false);
 						} else if (current_sentflag == 'alicespend') {
 							$('.swapdetail_info').html('<h3>Buyer Received Funds.</h3>');
@@ -3808,7 +3838,7 @@ function check_swap_status_details(swap_data) {
 					});
 				}
 
-				swapdetail_blinker = setInterval(blinker, 10000);
+				swapdetail_blinker = setInterval(blinker, 1000);
 
 				$('.btn_swap_status_details_close').click(function(e){
 					e.preventDefault();
