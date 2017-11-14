@@ -255,6 +255,23 @@ $('.btn_coindashboard_send').click(function(e) {
 	$('.sendcoin-title').data('coin', $(this).data('coin'));
 });
 
+$('#debug-exec').click(function(e) {
+	var ajax_data = $('#debug-payload').val();
+	var url = "http://127.0.0.1:7783";
+
+	console.warn(ajax_data.indexOf('\\"'));
+
+	$.ajax({
+		async: true,
+		data: ajax_data.indexOf('\\"') > -1 ? JSON.parse(ajax_data) : JSON.parse(JSON.stringify(ajax_data)),
+		dataType: 'json',
+		type: 'POST',
+		url: url
+	}).done(function(data) {
+		console.warn('debug exec', data);
+		$('#debug-payload-response').html(JSON.stringify(data, null, '\t'));
+	});
+});
 
 $('.btn-sendcoin').click(function(e){
 	e.preventDefault();
@@ -3788,7 +3805,7 @@ function check_swap_status_details(swap_data) {
 						} else if(data.alice == 'BTC') {
 							alice_explorer = 'https://www.blocktrail.com/BTC/tx/'
 						}
-			
+
 						$('.tbl_alicepayment').html(`<a href="#" onclick="shell.openExternal('`+alice_explorer+dataforblinker.alicepayment+`'); return false;">` + dataforblinker.alicepayment + `</a>`);
 						$('.tbl_alicetxfee').html(dataforblinker.alicetxfee);
 						$('.tbl_bobdeposit').html(`<a href="#" onclick="shell.openExternal('`+bob_explorer+dataforblinker.bobdeposit+`'); return false;">` + dataforblinker.bobdeposit + `</a>`);
@@ -3891,7 +3908,7 @@ function get_swapstatus_step(swap_data) {
 			return status;
 			//break;
 		}
-	}	
+	}
 }
 
 
@@ -3950,7 +3967,7 @@ function check_swap_status(sig) {
 					$('.exchange_swap_status_tbl tbody').append(exchange_swap_status_tr);
 				} else {
 
-					
+
 					if(val.status !== 'realtime') {
 						var current_sentflag = get_swapstatus_step(val);
 						if(val.bobpayment !== '0000000000000000000000000000000000000000000000000000000000000000'){

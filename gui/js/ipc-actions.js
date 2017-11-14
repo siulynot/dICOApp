@@ -3,7 +3,7 @@ var CheckMM_Interval = null;
 // In renderer process (web page).
 const {ipcRenderer} = require('electron')
 
-const _coin = 'MNZ';
+const _coin = 'REVS';
 
 ShepherdIPC = function(data) {
 	/*ipcRenderer.on('shepherd-reply', (event, arg) => {
@@ -36,6 +36,20 @@ $('.dexlogout-btn').click(function(e) {
 
 	//check_coin_balance(false);
 	sessionStorage.clear();
+});
+
+$('.dexdebug-btn').click(function(e) {
+	$('.dexdebug').show();
+	$('.dexlogout-btn').hide();
+	$('.dexdebug-close-btn').show();
+	$('.dexdebug-btn').hide();
+});
+
+$('.dexdebug-close-btn').click(function(e) {
+	$('.dexdebug').hide();
+	$('.dexdebug-btn').show();
+	$('.dexlogout-btn').show();
+	$('.dexdebug-close-btn').hide();
 });
 
 $('.login-genpass-btn').click(function(e){
