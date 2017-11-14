@@ -303,6 +303,8 @@ table tbody tr:first-child td {
   background: #fff;
   z-index: 1000;
   padding: 20px;
+  overflow-y: scroll;
+  height: calc(100% - 60px);
 }
 #debug-payload {
   width: 100%;
@@ -316,5 +318,4 @@ table tbody tr:first-child td {
   width: 100%;
   border: solid 1px #ccc;
   min-height: 200px;
-  overflow-y: auto;
 }
