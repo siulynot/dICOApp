@@ -2588,22 +2588,18 @@ $('.your_coins_balance_info').on('click', '.coin_balance_send', function() {
 						<h3 class="panel-title"><strong>Send Transaction</strong></h3>
 						</div>
 						<div class="panel-body"> <!-- panel-body -->
-
-							<form class="form-horizontal">
-								<div class="form-group">
-									<label for="bot_send_toaddr" class="col-sm-2 control-label">To</label>
-									<div class="col-sm-10">
-										<input type="text" class="form-control" id="bot_send_toaddr" placeholder="Address">
-									</div>
+							<div class="form-group">
+								<div class="input-group col-sm-12">
+									<span class="input-group-addon coin_ticker" style="font-size: 20px;">To Address</span>
+									<input type="number" class="form-control" id="bot_send_toaddr" placeholder="Address" style="height: 64px; font-size: 20px;">
 								</div>
-								<div class="form-group">
-									<label for="bot_send_amount" class="col-sm-2 control-label">Amount</label>
-									<div class="col-sm-10">
-										<input type="text" class="form-control" id="bot_send_amount" placeholder="e.g. 0.01">
-									</div>
+							</div>
+							<div class="form-group">
+								<div class="input-group col-sm-12">
+									<span class="input-group-addon coin_ticker" style="font-size: 20px;">Amount</span>
+									<input type="number" class="form-control" id="bot_send_amount" placeholder="Amount e.g. 12.5" style="height: 64px; font-size: 20px;">
 								</div>
-							</form>
-
+							</div>
 						</div>
 					</div>
 				</div>
@@ -3739,11 +3735,11 @@ function check_swap_status_details(swap_data) {
 						</tr>
 						<tr>
 							<td>depositspent</td>
-							<td class="tbl_depositspent"><a href="#" onclick="shell.openExternal('`+bob_explorer+data.depositspent+`'); return false;">` + data.depositspent + `</a></td>
+							<td class="tbl_depositspent">` + data.depositspent + `</td>
 						</tr>
 						<tr>
 							<td>Apayment Spent</td>
-							<td class="tbl_Apaymentspent"><a href="#" onclick="shell.openExternal('`+bob_explorer+data.Apaymentspent+`'); return false;">` + data.Apaymentspent + `</a></td>
+							<td class="tbl_Apaymentspent">`+data.Apaymentspent+`</td>
 						</tr>
 					</table>`,
 				closeButton: false,
@@ -3800,8 +3796,8 @@ function check_swap_status_details(swap_data) {
 						$('.tbl_bobtxfee').html(dataforblinker.bobtxfee);;
 						$('.tbl_sentflags').html(JSON.stringify(dataforblinker.sentflags), null, 2);
 						$('.tbl_values').html(JSON.stringify(dataforblinker.values), null, 2);
-						$('.tbl_depositspent').html(`<a href="#" onclick="shell.openExternal('`+bob_explorer+dataforblinker.depositspent+`'); return false;">` + dataforblinker.depositspent + `</a>`);
-						$('.tbl_Apaymentspent').html(`<a href="#" onclick="shell.openExternal('`+bob_explorer+dataforblinker.Apaymentspent+`'); return false;">` + dataforblinker.Apaymentspent + `</a>`);
+						$('.tbl_depositspent').html(dataforblinker.depositspent);
+						$('.tbl_Apaymentspent').html(dataforblinker.Apaymentspent);
 
 						var current_sentflag = get_swapstatus_step(dataforblinker)
 						console.log('CURRENT SENT FLAG IS: ' + current_sentflag);
