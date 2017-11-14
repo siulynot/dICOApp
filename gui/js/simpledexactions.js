@@ -8,6 +8,7 @@ var check_my_prices_Internal = null;
 var check_bot_list_Internal = null;
 var bot_screen_coin_balance_Internal = null;
 var bot_screen_sellcoin_balance_Internal = null;
+var shell = require('electron').shell;
 
 $(document).ready(function() {
 	var mmstatus = ShepherdIPC({"command":"mmstatus"});
@@ -292,7 +293,7 @@ $('.btn-sendcoin').click(function(e){
 			// .then() returns a new promise
 			console.log(data);
 			if (data.complete == false) {
-				toastr.error('Uncessful Transaction. Please try again.','Tansaction info');
+				toastr.error('Unsuccessful Transaction. Please try again.','Tansaction info');
 			}
 			if (data.complete == true) {
 				bootbox.confirm({
@@ -3644,9 +3645,9 @@ function check_swap_status_details(swap_data) {
 
 			var alice_explorer = '';
 			if(data.alice == 'MNZ') {
-				alice_explorer = 'https://www.mnzexplorer.com'
+				alice_explorer = 'https://www.mnzexplorer.com/tx/'
 			} else if(data.alice == 'KMD') {
-				alice_explorer = 'https://www.kmd.host'
+				alice_explorer = 'https://www.kmd.host/tx/'
 			} else if(data.alice == 'BTC') {
 				alice_explorer = 'https://www.blocktrail.com/BTC/tx/'
 			}
@@ -3700,7 +3701,7 @@ function check_swap_status_details(swap_data) {
 						</tr>
 						<tr>
 							<td>Buyer Payment</td>
-							<td class="tbl_alicepayment">` + data.alicepayment + `</td>
+							<td class="tbl_alicepayment">` + `<a href="#" onclick="shell.openExternal('`+alice_explorer+data.alicepayment+`'); return false;">` + data.alicepayment + `</a></td>
 						</tr>
 						<tr>
 							<td>Buyer Tx Fee</td>
@@ -3713,11 +3714,11 @@ function check_swap_status_details(swap_data) {
 						</tr>
 						<tr>
 							<td>Seller Deposit</td>
-							<td class="tbl_bobdeposit">` + `<a href="`+bob_explorer+data.bobdeposit+`" onclick="window.open(this.href,'targetWindow',width=1280px,height=800px'); return false;">` + data.bobdeposit + `</a></td>
+							<td class="tbl_bobdeposit">` + `<a href="#" onclick="shell.openExternal('`+bob_explorer+data.bobdeposit+`'); return false;">` + data.bobdeposit + `</a></td>
 						</tr>
 						<tr>
 							<td>Seller Payment</td>
-							<td class="tbl_bobpayment">` + data.bobpayment + `</td>
+							<td class="tbl_bobpayment"><a href="#" onclick="shell.openExternal('`+bob_explorer+data.bobpayment+`'); return false;">` + data.bobpayment + `</a></td>
 						</tr>
 						<tr>
 							<td>Seller Tx Fee</td>
@@ -3738,11 +3739,11 @@ function check_swap_status_details(swap_data) {
 						</tr>
 						<tr>
 							<td>depositspent</td>
-							<td class="tbl_depositspent">` + data.depositspent + `</td>
+							<td class="tbl_depositspent"><a href="#" onclick="shell.openExternal('`+bob_explorer+data.depositspent+`'); return false;">` + data.depositspent + `</a></td>
 						</tr>
 						<tr>
 							<td>Apayment Spent</td>
-							<td class="tbl_Apaymentspent">` + data.Apaymentspent + `</td>
+							<td class="tbl_Apaymentspent"><a href="#" onclick="shell.openExternal('`+bob_explorer+data.Apaymentspent+`'); return false;">` + data.Apaymentspent + `</a></td>
 						</tr>
 					</table>`,
 				closeButton: false,
@@ -3775,32 +3776,32 @@ function check_swap_status_details(swap_data) {
 						url: url
 					}).done(function(dataforblinker) {
 						var bob_explorer = '';
-			if(data.bob == 'MNZ') {
-				bob_explorer = 'https://www.mnzexplorer.com/tx/'
-			} else if(data.bob == 'KMD') {
-				bob_explorer = 'https://www.kmd.host/tx/'
-			} else if(data.bob == 'BTC') {
-				bob_explorer = 'https://www.blocktrail.com/BTC/tx/'
-			}
+						if(data.bob == 'MNZ') {
+							bob_explorer = 'https://www.mnzexplorer.com/tx/'
+						} else if(data.bob == 'KMD') {
+							bob_explorer = 'https://www.kmd.host/tx/'
+						} else if(data.bob == 'BTC') {
+							bob_explorer = 'https://www.blocktrail.com/BTC/tx/'
+						}
 
-			var alice_explorer = '';
-			if(data.alice == 'MNZ') {
-				alice_explorer = 'https://www.mnzexplorer.com'
-			} else if(data.alice == 'KMD') {
-				alice_explorer = 'https://www.kmd.host'
-			} else if(data.alice == 'BTC') {
-				alice_explorer = 'https://www.blocktrail.com/BTC/tx/'
-			}
+						var alice_explorer = '';
+						if(data.alice == 'MNZ') {
+							alice_explorer = 'https://www.mnzexplorer.com/tx/'
+						} else if(data.alice == 'KMD') {
+							alice_explorer = 'https://www.kmd.host/tx/'
+						} else if(data.alice == 'BTC') {
+							alice_explorer = 'https://www.blocktrail.com/BTC/tx/'
+						}
 			
-						$('.tbl_alicepayment').html(dataforblinker.alicepayment);
+						$('.tbl_alicepayment').html(`<a href="#" onclick="shell.openExternal('`+alice_explorer+dataforblinker.alicepayment+`'); return false;">` + dataforblinker.alicepayment + `</a>`);
 						$('.tbl_alicetxfee').html(dataforblinker.alicetxfee);
-						$('.tbl_bobdeposit').html(`<a href="`+bob_explorer+dataforblinker.bobdeposit+`" onclick="window.open(this.href,'targetWindow',width=1280px,height=800px'); return false;">` + dataforblinker.bobdeposit);
-						$('.tbl_bobpayment').html(dataforblinker.bobpayment);
+						$('.tbl_bobdeposit').html(`<a href="#" onclick="shell.openExternal('`+bob_explorer+dataforblinker.bobdeposit+`'); return false;">` + dataforblinker.bobdeposit + `</a>`);
+						$('.tbl_bobpayment').html(`<a href="#" onclick="shell.openExternal('`+bob_explorer+dataforblinker.bobpayment+`'); return false;">` + dataforblinker.bobpayment + `</a>`);
 						$('.tbl_bobtxfee').html(dataforblinker.bobtxfee);;
 						$('.tbl_sentflags').html(JSON.stringify(dataforblinker.sentflags), null, 2);
 						$('.tbl_values').html(JSON.stringify(dataforblinker.values), null, 2);
-						$('.tbl_depositspent').html(dataforblinker.depositspent);
-						$('.tbl_Apaymentspent').html(dataforblinker.Apaymentspent);
+						$('.tbl_depositspent').html(`<a href="#" onclick="shell.openExternal('`+bob_explorer+dataforblinker.depositspent+`'); return false;">` + dataforblinker.depositspent + `</a>`);
+						$('.tbl_Apaymentspent').html(`<a href="#" onclick="shell.openExternal('`+bob_explorer+dataforblinker.Apaymentspent+`'); return false;">` + dataforblinker.Apaymentspent + `</a>`);
 
 						var current_sentflag = get_swapstatus_step(dataforblinker)
 						console.log('CURRENT SENT FLAG IS: ' + current_sentflag);
