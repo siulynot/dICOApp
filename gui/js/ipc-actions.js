@@ -3,7 +3,7 @@ var CheckMM_Interval = null;
 // In renderer process (web page).
 const {ipcRenderer} = require('electron')
 
-const _coin = 'REVS';
+const _coin = 'MNZ';
 
 ShepherdIPC = function(data) {
 	/*ipcRenderer.on('shepherd-reply', (event, arg) => {
@@ -56,7 +56,6 @@ $('.login-genpass-btn').click(function(e){
 	e.preventDefault();
 
 	var login_gen_pass = bootbox.dialog({
-		onEscape: true,
 		backdrop: true,
 		onEscape: true,
 		message: `

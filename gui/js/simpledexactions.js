@@ -1065,6 +1065,7 @@ function enable_disable_coin(data) {
 					}
 					if (data.error == 'couldnt find coin locally installed') { //{error: "couldnt find coin locally installed", coin: "BTC"}
 						bootbox.alert({
+							onEscape: true,
 							backdrop: true,
 							title: "Couldn't find "+data.coin+" locally installed",
 							message: `<p>It seems you don't have `+data.coin+` wallet installed on your OS. Please check these following points to make sure you have your wallet setup properly:</p>
@@ -1134,6 +1135,7 @@ function enable_disable_coin(data) {
 				}
 				if (data.error == 'couldnt find coin locally installed') { //{error: "couldnt find coin locally installed", coin: "BTC"}
 					bootbox.alert({
+						onEscape: true,
 						backdrop: true,
 						title: "Couldn't find "+data.coin+" locally installed",
 						message: `<p>It seems you don't have `+data.coin+` wallet installed on your OS. Please check these following points to make sure you have your wallet setup properly:</p>
@@ -1504,6 +1506,7 @@ function make_inventory_withdraw(data) {
 			}
 			if (data.complete == true) {
 				bootbox.confirm({
+					onEscape: true,
 					backdrop: true,
 					message: 'Please confirm if you are ready to make inventory.',
 					buttons: {
@@ -1691,6 +1694,7 @@ function get_coins_list() {
 function addcoins_dialog(){
 
 	var bot_update_bootbox = bootbox.dialog({
+		onEscape: true,
 		backdrop: true,
 		message: `
 			<div class="row">
@@ -3250,7 +3254,6 @@ function bot_status(bot_data) {
 			}
 
 			var bot_update_bootbox = bootbox.dialog({
-				onEscape: true,
 				backdrop: true,
 				onEscape: true,
 				message: `
@@ -3669,7 +3672,21 @@ function check_swap_status_details(swap_data) {
 			//var expiration = moment.unix(data.expiration);
 			//var now = moment();
 
+			function renderValues(values) {
+				let _out = '';
+
+				if (values &&
+						values.length) {
+					for (let i = 0; i < values.length; i++) {
+						_out += `<div>${values[i]}</div>`;
+					}
+				}
+
+				return _out;
+			}
+
 			var swap_status_details_bootbox = bootbox.dialog({
+			onEscape: true,
 			backdrop: true,
 			message: `
 					<div class="input-group col-sm-12">
@@ -3748,7 +3765,7 @@ function check_swap_status_details(swap_data) {
 						</tr>
 						<tr>
 							<td>Values</td>
-							<td class="tbl_values">` + JSON.stringify(data.values, null, 2) + `</td>
+							<td class="tbl_values">` + renderValues(data.values) + `</td>
 						</tr>
 						<tr>
 							<td>depositspent</td>
@@ -3812,7 +3829,7 @@ function check_swap_status_details(swap_data) {
 						$('.tbl_bobpayment').html(`<a href="#" onclick="shell.openExternal('`+bob_explorer+dataforblinker.bobpayment+`'); return false;">` + dataforblinker.bobpayment + `</a>`);
 						$('.tbl_bobtxfee').html(dataforblinker.bobtxfee);;
 						$('.tbl_sentflags').html(JSON.stringify(dataforblinker.sentflags), null, 2);
-						$('.tbl_values').html(JSON.stringify(dataforblinker.values), null, 2);
+						$('.tbl_values').html(renderValues(dataforblinker.values));
 						$('.tbl_depositspent').html(dataforblinker.depositspent);
 						$('.tbl_Apaymentspent').html(dataforblinker.Apaymentspent);
 
@@ -3826,7 +3843,7 @@ function check_swap_status_details(swap_data) {
 						}
 
 						if(dataforblinker.bobpayment !== '0000000000000000000000000000000000000000000000000000000000000000'){
-							$('.swapdetail_info').html('<h3><font style="font-size: 200%;">🎉</font> Barter Completed!! Buyer Received Funds!</h3>');
+							$('.swapdetail_info').html('<h3><i class="fa fa-handshake-o"></i> Barter Completed!! Buyer Received Funds!</h3>');
 							blinker(false);
 						} else if (current_sentflag == 'alicespend') {
 							$('.swapdetail_info').html('<h3>Buyer Received Funds.</h3>');
